@@ -155,6 +155,14 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Test `analyze_match` returns `MatchResult` with score, strong matches, gaps, suggestions
     - Test `ValidationError` raised for responses `< 50 chars`
     - _Requirements: 4.4, 4.5, 5.4, 5.5, 6.3, 6.4, 6.5_
+  - [ ] 9.5 Enforce human-like tone in prompt templates
+    - Update `prompts/resume.md` and `prompts/cover_letter.md` with strict anti-cliché constraints (e.g. forbid 'delve', 'testament to', 'innovative', 'dynamic').
+    - Require tone to remain factual and strictly match the original base resume's voice.
+  - [ ] 9.6 Implement AI-cliché filter validation
+    - Update `tailor_resume()` and `generate_cover_letter()` to check the LLM response against a blacklist of common AI buzzwords.
+    - Raise `ValidationError` if the AI buzzword density is too high, preventing ATS bots from flagging the resume.
+  - [ ]* 9.7 Write unit test for AI-cliché filter in `tests/unit/test_tailor.py`
+    - Test that `ValidationError` is raised when the LLM response contains too many blacklisted AI clichés.
 
 - [ ] 10. Implement PDF renderer
   - [ ] 10.1 Create `src/render_pdf.py` with `render_resume_pdf()`, `render_cover_letter_pdf()`, and `_md_to_rendercv_yaml()`
