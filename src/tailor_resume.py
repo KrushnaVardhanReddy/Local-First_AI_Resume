@@ -7,6 +7,17 @@ from src.llm.base import LLMProvider
 from src.models import Job, MatchResult
 from src.utils import load_prompt
 
+AI_CLICHES = [
+    "delve", "testament to", "innovative", "dynamic", "synergy",
+    "leverage", "spearhead", "game-changer", "paradigm shift"
+]
+
+def check_ai_cliches(text: str) -> None:
+    text_lower = text.lower()
+    cliche_count = sum(1 for cliche in AI_CLICHES if cliche in text_lower)
+    if cliche_count > 2:
+        raise ValidationError(f"LLM response contains too many AI clichés ({cliche_count})")
+
 def tailor_resume(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider) -> Path:
     """Tailors a resume using an LLM and saves it to the output dir."""
     job_output_dir = Path(config.output_dir) / job.slug
@@ -37,6 +48,8 @@ def tailor_resume(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider)
 
     if len(response) < 50:
         raise ValidationError("LLM response too short (< 50 chars)")
+
+    check_ai_cliches(response)
 
     output_path = job_output_dir / "resume.md"
     with open(output_path, "w", encoding="utf-8") as f:
@@ -73,6 +86,8 @@ def generate_cover_letter(job: Job, config: AppConfig, user_dir: Path, llm: LLMP
 
     if len(response) < 50:
         raise ValidationError("LLM response too short (< 50 chars)")
+
+    check_ai_cliches(response)
 
     output_path = job_output_dir / "cover_letter.md"
     with open(output_path, "w", encoding="utf-8") as f:

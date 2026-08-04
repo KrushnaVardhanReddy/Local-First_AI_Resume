@@ -90,7 +90,7 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Test that `get_provider()` raises `ConfigError` for unknown provider string
     - Test that each provider is returned for its respective key
     - _Requirements: 3.6_
-  - [ ] 5.7 Implement Rate-Limiting and Exponential Backoff
+  - [x] 5.7 Implement Rate-Limiting and Exponential Backoff
     - Wrap API calls in `AnthropicProvider` and `OpenAIProvider` with retry logic.
     - Implement exponential backoff for HTTP 429 (Rate Limit) responses to prevent crashes during large batches.
 
@@ -120,16 +120,16 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Test each filter rule independently with known fixtures
     - Test that `_save_job` writes files to the correct path structure
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6_
-  - [ ] 6.7 Add job type filtering
+  - [x] 6.7 Add job type filtering
     - Add `job_type: Optional[str] = None` to `SearchConfig` (and `config.yaml.example`).
     - Update `src/search_jobs.py` to pass `job_type=config.search.job_type` to the scraper.
-  - [ ] 6.8 Implement Multi-Provider Concurrent Search
+  - [x] 6.8 Implement Multi-Provider Concurrent Search
     - Abstract the search provider logic so we can support other scrapers (e.g., SerpAPI, rapidAPI) alongside JobSpy.
     - Use `concurrent.futures` or `asyncio` to run multiple search providers concurrently.
     - Merge and deduplicate the `DataFrame` results returned by all providers.
-  - [ ] 6.9 Add Proxy Support for Scrapers
+  - [x] 6.9 Add Proxy Support for Scrapers
     - Add an optional `proxies` field in `SearchConfig` to pass rotating proxies down to JobSpy and other search providers to avoid IP bans.
-  - [ ] 6.10 Add Keyword Exclusion Filtering
+  - [x] 6.10 Add Keyword Exclusion Filtering
     - Add an `exclude_keywords` list in `SearchConfig`.
     - Update `_filter_jobs()` to drop any jobs containing those red-flag keywords (e.g. "US Citizen", "Clearance") in the description.
 
@@ -170,13 +170,13 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Test `analyze_match` returns `MatchResult` with score, strong matches, gaps, suggestions
     - Test `ValidationError` raised for responses `< 50 chars`
     - _Requirements: 4.4, 4.5, 5.4, 5.5, 6.3, 6.4, 6.5_
-  - [ ] 9.5 Enforce human-like tone in prompt templates
+  - [x] 9.5 Enforce human-like tone in prompt templates
     - Update `prompts/resume.md` and `prompts/cover_letter.md` with strict anti-cliché constraints (e.g. forbid 'delve', 'testament to', 'innovative', 'dynamic').
     - Require tone to remain factual and strictly match the original base resume's voice.
-  - [ ] 9.6 Implement AI-cliché filter validation
+  - [x] 9.6 Implement AI-cliché filter validation
     - Update `tailor_resume()` and `generate_cover_letter()` to check the LLM response against a blacklist of common AI buzzwords.
     - Raise `ValidationError` if the AI buzzword density is too high, preventing ATS bots from flagging the resume.
-  - [ ]* 9.7 Write unit test for AI-cliché filter in `tests/unit/test_tailor.py`
+  - [x]* 9.7 Write unit test for AI-cliché filter in `tests/unit/test_tailor.py`
     - Test that `ValidationError` is raised when the LLM response contains too many blacklisted AI clichés.
 
 - [x] 10. Implement PDF renderer
@@ -209,7 +209,7 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Test that both `.md` and `.csv` are written with the correct format
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
 
-- [ ] 12. Checkpoint — Ensure all unit and property tests pass
+- [x] 12. Checkpoint — Ensure all unit and property tests pass
   - Run `uv run pytest tests/unit/ tests/property/ -v`
   - Ensure all tests pass; ask the user if questions arise.
 

@@ -13,5 +13,11 @@ search:
   remote: true
   results_wanted: 20
   min_salary: 100000        # optional
+  job_type: "fulltime"      # optional
   exclude_companies:        # optional
     - "Acme Corp"
+  exclude_keywords:         # optional
+    - "US Citizen"
+    - "Clearance"
+  proxies:                  # optional
+    - "http://user:pass@host:port"

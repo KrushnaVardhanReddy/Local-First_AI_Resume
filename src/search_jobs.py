@@ -1,9 +1,32 @@
 import json
 from pathlib import Path
 import pandas as pd
+import concurrent.futures
+from abc import ABC, abstractmethod
 from jobspy import scrape_jobs
 from .models import Job
 from .config import AppConfig
+
+class SearchProvider(ABC):
+    @abstractmethod
+    def search(self, config: AppConfig) -> pd.DataFrame:
+        pass
+
+class JobspyProvider(SearchProvider):
+    def search(self, config: AppConfig) -> pd.DataFrame:
+        kwargs = {
+            "site_name": ["linkedin", "indeed", "glassdoor", "zip_recruiter"],
+            "search_term": config.search.keywords,
+            "location": config.search.location,
+            "results_wanted": config.search.results_wanted,
+            "is_remote": config.search.remote,
+        }
+        if config.search.job_type:
+            kwargs["job_type"] = config.search.job_type
+        if config.search.proxies:
+            kwargs["proxies"] = config.search.proxies
+
+        return scrape_jobs(**kwargs)
 
 def _filter_jobs(jobs_df: pd.DataFrame, config: AppConfig) -> pd.DataFrame:
     if jobs_df.empty:
@@ -34,6 +57,15 @@ def _filter_jobs(jobs_df: pd.DataFrame, config: AppConfig) -> pd.DataFrame:
     # Requirements: apply company exclusion list
     if config.search.exclude_companies:
         df = df[~df['company'].isin(config.search.exclude_companies)]
+
+    # Requirements: apply keyword exclusion filtering on description
+    if config.search.exclude_keywords:
+        # Create a boolean mask indicating if any excluded keyword is in the description
+        pattern = '|'.join(config.search.exclude_keywords)
+        # Using case-insensitive search
+        mask = df['description'].str.contains(pattern, case=False, na=False, regex=True)
+        # Keep jobs that DO NOT match the mask
+        df = df[~mask]
 
     return df
 
@@ -67,13 +99,23 @@ def _save_job(job: Job, output_dir: Path) -> None:
         json.dump(job_json_content, f, indent=2)
 
 def search_jobs(config: AppConfig, user_dir: Path) -> list[Job]:
-    jobs_df = scrape_jobs(
-        site_name=["linkedin", "indeed", "glassdoor", "zip_recruiter"],
-        search_term=config.search.keywords,
-        location=config.search.location,
-        results_wanted=config.search.results_wanted,
-        is_remote=config.search.remote
-    )
+    providers = [JobspyProvider()]
+
+    dfs = []
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future_to_provider = {executor.submit(p.search, config): p for p in providers}
+        for future in concurrent.futures.as_completed(future_to_provider):
+            try:
+                df = future.result()
+                if not df.empty:
+                    dfs.append(df)
+            except Exception as exc:
+                print(f"A search provider generated an exception: {exc}")
+
+    if not dfs:
+        jobs_df = pd.DataFrame()
+    else:
+        jobs_df = pd.concat(dfs, ignore_index=True)
 
     filtered_df = _filter_jobs(jobs_df, config)
 
