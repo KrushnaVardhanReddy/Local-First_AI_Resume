@@ -247,19 +247,19 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Test `--force` flag is passed through correctly
     - _Requirements: 13.2, 14.3, 14.7_
 
-- [ ] 15. Write integration tests
-  - [ ] 15.1 Create `tests/integration/test_search_pipeline.py`
+- [x] 15. Write integration tests
+  - [x] 15.1 Create `tests/integration/test_search_pipeline.py`
     - Full `search` command with a mocked `scrape_jobs()` returning a fixture DataFrame
     - Verify job files (`job.md`, `job.json`) are written to the correct `output/{slug}/` paths
     - Verify filter rules are applied (duplicate and short-description entries excluded)
     - _Requirements: 1.1, 1.2, 1.3, 1.6, 1.7_
-  - [ ] 15.2 Create `tests/integration/test_tailor_pipeline.py`
+  - [x] 15.2 Create `tests/integration/test_tailor_pipeline.py`
     - Full `tailor` command with a stub LLM that returns fixture markdown
     - Verify all expected output files written: `resume.md`, `resume.pdf`, `cover_letter.md`, `cover_letter.pdf`, `match_notes.md`, `metadata.json`
     - Verify tracker updated with correct row
     - Verify `--force` flag causes already-processed jobs to be reprocessed
     - _Requirements: 2.4, 4.4, 5.4, 6.4, 7.1, 7.2, 8.1, 10.3, 10.5, 13.7_
-  - [ ] 15.3 Create `tests/integration/test_pluggable_templates.py`
+  - [x] 15.3 Create `tests/integration/test_pluggable_templates.py`
     - Verify that placing a mock LaTeX theme in `users/{username}/templates/` allows RenderCV to load it without error.
     - Verify that placing a mock `resume.md` in `users/{username}/prompts/` overrides the default `prompts/resume.md` file correctly.
 
@@ -267,7 +267,7 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
   - [x] 16.1 Custom RenderCV Themes: Ensure the architecture supports loading custom RenderCV theme folders from a `users/{username}/templates/` directory so users can install third-party PDF themes.
   - [x] 16.2 Custom Prompt Packs: Ensure `load_prompt()` supports reading prompt overrides from a `users/{username}/prompts/` directory to allow users to drop in community "Prompt Packs".
 
-- [ ] 17. Final checkpoint — Ensure all tests pass
+- [x] 17. Final checkpoint — Ensure all tests pass
   - Run `uv run pytest tests/ -v`
   - Ensure all unit, property, and integration tests pass; ask the user if questions arise.
 

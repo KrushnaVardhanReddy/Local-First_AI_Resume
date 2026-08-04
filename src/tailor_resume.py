@@ -22,7 +22,7 @@ from typing import Tuple
 
 def tailor_resume(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider) -> Tuple[Path, dict]:
     """Tailors a resume using an LLM and saves it to the output dir. Returns path and token usage."""
-    job_output_dir = Path(config.output_dir) / job.slug
+    job_output_dir = user_dir / config.output_dir / job.slug
     job_output_dir.mkdir(parents=True, exist_ok=True)
 
     base_resume_path = user_dir / config.base_resume
@@ -63,7 +63,7 @@ def tailor_resume(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider)
 
 def generate_cover_letter(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider) -> Tuple[Path, dict]:
     """Generates a cover letter using an LLM and saves it to the output dir. Returns path and token usage."""
-    job_output_dir = Path(config.output_dir) / job.slug
+    job_output_dir = user_dir / config.output_dir / job.slug
     job_output_dir.mkdir(parents=True, exist_ok=True)
 
     resume_path = job_output_dir / "resume.md"
@@ -103,7 +103,7 @@ def generate_cover_letter(job: Job, config: AppConfig, user_dir: Path, llm: LLMP
 
 def analyze_match(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider) -> Tuple[MatchResult, dict]:
     """Analyzes job match using an LLM, returning a MatchResult and token usage."""
-    job_output_dir = Path(config.output_dir) / job.slug
+    job_output_dir = user_dir / config.output_dir / job.slug
     job_output_dir.mkdir(parents=True, exist_ok=True)
 
     base_resume_path = user_dir / config.base_resume
