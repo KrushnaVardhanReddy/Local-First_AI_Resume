@@ -437,6 +437,34 @@ Templates use `{{base_resume}}` and `{{job_description}}` as placeholders. The l
 
 ---
 
+## Local Web UI (Streamlit)
+
+A local web dashboard (`src/web/app.py`) that allows users to:
+- Configuration Editor: UI to visually edit `SearchConfig` (keywords, location, proxy settings).
+- Prompt & Base Resume Editor: Text area components to edit the base resume and prompt templates on the fly.
+- Job Review & Match Analysis: Display `tracker.csv` and new jobs in a Kanban board. Show the LLM Match Score alongside the job description.
+- PDF Previewer: Embed the generated output `resume.pdf` and `cover_letter.pdf` in the browser so users can verify it before applying.
+
+---
+
+## Model Context Protocol (MCP) Integration
+
+Uses the official `mcp` Python SDK in `src/mcp_server.py`:
+- **Server:** Exposes `search_jobs` and `tailor_resume` as tools to external AI agents (like Claude Desktop).
+- **Client:** Allows fetching the base resume from external MCP servers (e.g., pulling directly from the user's local Obsidian vault or Notion workspace).
+
+---
+
+## Packaging & Distribution
+
+To simplify distribution to non-technical users, the application is packaged into standalone executables.
+
+- **CLI Binary**: Package CLI with PyInstaller into a single `.exe` (Windows) and binary (macOS/Linux).
+- **Web UI Binary**: Wrap the Streamlit UI into a desktop executable (using PyInstaller or PyWebView). Streamlit requires specific metadata flags during PyInstaller compilation.
+- **Automated Build Pipeline**: A GitHub Actions workflow automates the build process across Windows, macOS, and Linux runners upon every new version, creating GitHub Releases.
+
+---
+
 ## Error Handling
 
 ### Error taxonomy

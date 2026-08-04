@@ -23,5 +23,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest",
-    "hypothesis"
+    "pytest-asyncio",
+    "hypothesis",
+    "pyinstaller"
 ]
