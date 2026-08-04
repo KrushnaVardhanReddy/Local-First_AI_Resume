@@ -1,0 +1,117 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Required Packages
+\usepackage{fontspec}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{fontawesome5}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% Fonts
+\setmainfont{Fira Code}
+
+% Colors
+\definecolor{primaryColor}{HTML}{<< design.colors.primary_color | default("2F4F4F", true) >>}
+\definecolor{textColor}{HTML}{000000}
+
+% Page Setup
+\geometry{
+    margin=1.2cm
+}
+\pagestyle{empty}
+
+% Section Titles
+\titleformat{\section}{\large\bfseries\color{primaryColor}}{}{0em}{}[\vspace{-0.5em}\rule{\linewidth}{1pt}]
+\titlespacing*{\section}{0pt}{1ex}{0.5ex}
+
+\setlist[itemize]{leftmargin=*, nosep}
+
+% Custom macros
+\newcommand{\cvheader}[2]{
+    \begin{center}
+        {\Huge \bfseries #1} \\ \vspace{0.2em}
+        {\large #2} \\ \vspace{0.2em}
+    \end{center}
+}
+
+\begin{document}
+
+\cvheader{<< cv.name >>}{<< cv.label >>}
+
+\begin{center}
+    << if cv.phone >>
+    \faPhone \ << cv.phone >> \quad
+    << endif >>
+    << if cv.email >>
+    \faEnvelope \ \href{mailto:<< cv.email >>}{<< cv.email >>} \quad
+    << endif >>
+    << if cv.location >>
+    \faMapMarker \ << cv.location >> \quad
+    << endif >>
+    << if cv.website >>
+    \faGlobe \ \href{<< cv.website >>}{<< cv.website >>} \quad
+    << endif >>
+    << if cv.social_networks >>
+    << for network in cv.social_networks >>
+    \faLink \ \href{<< network.url >>}{<< network.network >>} \quad
+    << endfor >>
+    << endif >>
+\end{center}
+
+\vspace{0.5em}
+
+% Summary
+<< if "Summary" in cv.sections >>
+\section*{Summary}
+<< for entry in cv.sections["Summary"] >>
+<< entry >>
+<< endfor >>
+<< endif >>
+
+% Skills
+<< if "Skills" in cv.sections >>
+\section*{Skills}
+\begin{itemize}
+    << for entry in cv.sections["Skills"] >>
+    \item \textbf{<< entry.label >>}: << entry.details >>
+    << endfor >>
+\end{itemize}
+<< endif >>
+
+% Experience
+<< if "Experience" in cv.sections >>
+\section*{Experience}
+<< for entry in cv.sections["Experience"] >>
+\noindent\textbf{<< entry.position >>} \hfill << entry.date_string >> \\
+\textit{<< entry.company >>} \hfill << entry.location >>
+<< if entry.highlights >>
+\begin{itemize}
+    << for highlight in entry.highlights >>
+    \item << highlight >>
+    << endfor >>
+\end{itemize}
+<< endif >>
+\vspace{0.5em}
+<< endfor >>
+<< endif >>
+
+% Education
+<< if "Education" in cv.sections >>
+\section*{Education}
+<< for entry in cv.sections["Education"] >>
+\noindent\textbf{<< entry.degree >>} \hfill << entry.date_string >> \\
+\textit{<< entry.institution >>} \hfill << entry.location >>
+<< if entry.highlights >>
+\begin{itemize}
+    << for highlight in entry.highlights >>
+    \item << highlight >>
+    << endfor >>
+\end{itemize}
+<< endif >>
+\vspace{0.5em}
+<< endfor >>
+<< endif >>
+
+\end{document}
