@@ -91,29 +91,29 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Test that each provider is returned for its respective key
     - _Requirements: 3.6_
 
-- [ ] 6. Implement job search and filtering
-  - [ ] 6.1 Create `src/search_jobs.py` with `search_jobs()`, `_filter_jobs()`, and `_save_job()`
+- [x] 6. Implement job search and filtering
+  - [x] 6.1 Create `src/search_jobs.py` with `search_jobs()`, `_filter_jobs()`, and `_save_job()`
     - `search_jobs(config, user_dir)`: call `jobspy.scrape_jobs()` with configured keywords/location/remote/results_wanted; call `_filter_jobs()`; call `_save_job()` for each accepted job; return `list[Job]`
     - `_filter_jobs(jobs_df, config)`: apply deduplication by (company, title); remove entries with description `len < 100`; apply salary filter if `min_salary` set; apply company exclusion list
     - `_save_job(job, output_dir)`: write `job.md` (human-readable) and `job.json` (structured with title, company, location, salary range, source_url) inside `output_dir/{job.slug}/`
     - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7_
-  - [ ]* 6.2 Write property test P3 — duplicate filter in `tests/property/test_filter_properties.py`
+  - [x]* 6.2 Write property test P3 — duplicate filter in `tests/property/test_filter_properties.py`
     - **Property 3: Duplicate job filter removes exact duplicates**
     - Use `st.lists(job_strategy())` and inject duplicate (company, title) pairs; assert each pair appears at most once in output
     - **Validates: Requirements 1.2**
-  - [ ]* 6.3 Write property test P4 — short-description filter in `tests/property/test_filter_properties.py`
+  - [x]* 6.3 Write property test P4 — short-description filter in `tests/property/test_filter_properties.py`
     - **Property 4: Short-description filter removes all sub-threshold jobs**
     - Use `st.lists(job_strategy())` and inject entries with `len(description) < 100`; assert none remain in output
     - **Validates: Requirements 1.3**
-  - [ ]* 6.4 Write property test P5 — salary filter in `tests/property/test_filter_properties.py`
+  - [x]* 6.4 Write property test P5 — salary filter in `tests/property/test_filter_properties.py`
     - **Property 5: Salary filter excludes all below-threshold jobs**
     - Use `st.integers()` for threshold and `st.lists(job_strategy())`; assert no job with `salary_max < T` in output
     - **Validates: Requirements 1.4**
-  - [ ]* 6.5 Write property test P11 — job file pair written in `tests/property/test_search_output_properties.py`
+  - [x]* 6.5 Write property test P11 — job file pair written in `tests/property/test_search_output_properties.py`
     - **Property 11: Accepted job files are always written as a pair**
     - Use `st.lists(job_strategy(), min_size=1)`; after calling `_save_job()` verify both `job.md` and `job.json` exist and `job.json` has non-empty title, company, location, source_url
     - **Validates: Requirements 1.6, 1.7**
-  - [ ]* 6.6 Write unit tests for `src/search_jobs.py` in `tests/unit/test_filter.py`
+  - [x]* 6.6 Write unit tests for `src/search_jobs.py` in `tests/unit/test_filter.py`
     - Test each filter rule independently with known fixtures
     - Test that `_save_job` writes files to the correct path structure
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6_
