@@ -1,0 +1,11 @@
+
+oindent\textbf{<< entry.title | default(entry.position, true) | default(entry.degree, true) >>} \hfill << entry.date_string >> \\
+\textit{<< entry.company | default(entry.institution, true) >>} \hfill << entry.location >>
+<< if entry.highlights >>
+\begin{itemize}
+    << for highlight in entry.highlights >>
+    \item << highlight >>
+    << endfor >>
+\end{itemize}
+<< endif >>
+\vspace{0.5em}

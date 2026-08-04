@@ -1,0 +1,139 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Required Packages
+\usepackage{fontspec}
+\usepackage{xcolor}
+\usepackage{paracol}
+\usepackage{geometry}
+\usepackage{fontawesome5}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+% Fonts
+\setmainfont{Roboto}
+
+% Colors
+\definecolor{primaryColor}{HTML}{<< design.colors.primary_color | default("b0c4de", true) >>}
+\definecolor{textColor}{HTML}{000000}
+\definecolor{darkGrey}{HTML}{333333}
+
+% Page Setup
+\geometry{
+    margin=1.5cm
+}
+\pagestyle{empty}
+
+% Section Titles
+\titleformat{\section}{\large\bfseries\color{primaryColor}\uppercase}{}{0em}{}[\vspace{-0.5em}\rule{\linewidth}{1pt}]
+\titlespacing*{\section}{0pt}{1.5ex}{1ex}
+
+% Custom macros
+\newcommand{\cvheader}[2]{
+    \begin{center}
+        {\Huge \bfseries #1} \\ \vspace{0.5em}
+        {\large #2}
+    \end{center}
+}
+
+\begin{document}
+
+\columnratio{0.3}
+\begin{paracol}{2}
+
+% LEFT COLUMN
+\begin{leftcolumn}
+\colorbox{primaryColor}{
+    \begin{minipage}{\linewidth}
+    \color{darkGrey}
+    % Contact Info
+    \section*{Contact}
+    \begin{itemize}[label={}, leftmargin=0pt]
+        << if cv.phone >>
+        \item \faPhone \ << cv.phone >>
+        << endif >>
+        << if cv.email >>
+        \item \faEnvelope \ \href{mailto:<< cv.email >>}{<< cv.email >>}
+        << endif >>
+        << if cv.location >>
+        \item \faMapMarker \ << cv.location >>
+        << endif >>
+        << if cv.website >>
+        \item \faGlobe \ \href{<< cv.website >>}{<< cv.website >>}
+        << endif >>
+    \end{itemize}
+
+    % Social Profiles
+    << if cv.social_networks >>
+    \section*{Profiles}
+    \begin{itemize}[label={}, leftmargin=0pt]
+        << for network in cv.social_networks >>
+        \item \faLink \ \href{<< network.url >>}{<< network.network >>}
+        << endfor >>
+    \end{itemize}
+    << endif >>
+
+    % Skills
+    << if "Skills" in cv.sections >>
+    \section*{Skills}
+    << for entry in cv.sections["Skills"] >>
+    \textbf{<< entry.label >>}: \\
+    << entry.details >> \\
+    << endfor >>
+    << endif >>
+
+    \vspace{2cm} % Add some space at the bottom
+    \end{minipage}
+}
+\end{leftcolumn}
+
+% RIGHT COLUMN
+\begin{rightcolumn}
+    \cvheader{<< cv.name >>}{<< cv.label >>}
+
+    % Summary
+    << if "Summary" in cv.sections >>
+    \section*{Summary}
+    << for entry in cv.sections["Summary"] >>
+    << entry >>
+    << endfor >>
+    << endif >>
+
+    % Experience
+    << if "Experience" in cv.sections >>
+    \section*{Experience}
+    << for entry in cv.sections["Experience"] >>
+    \noindent\textbf{<< entry.position >>} \hfill << entry.date_string >> \\
+    \textit{<< entry.company >>} \hfill << entry.location >>
+    << if entry.highlights >>
+    \begin{itemize}
+        << for highlight in entry.highlights >>
+        \item << highlight >>
+        << endfor >>
+    \end{itemize}
+    << endif >>
+    \vspace{1em}
+    << endfor >>
+    << endif >>
+
+    % Education
+    << if "Education" in cv.sections >>
+    \section*{Education}
+    << for entry in cv.sections["Education"] >>
+    \noindent\textbf{<< entry.degree >>} \hfill << entry.date_string >> \\
+    \textit{<< entry.institution >>} \hfill << entry.location >>
+    << if entry.highlights >>
+    \begin{itemize}
+        << for highlight in entry.highlights >>
+        \item << highlight >>
+        << endfor >>
+    \end{itemize}
+    << endif >>
+    \vspace{1em}
+    << endfor >>
+    << endif >>
+
+\end{rightcolumn}
+\end{paracol}
+
+\end{document}
