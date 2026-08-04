@@ -90,6 +90,9 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Test that `get_provider()` raises `ConfigError` for unknown provider string
     - Test that each provider is returned for its respective key
     - _Requirements: 3.6_
+  - [ ] 5.7 Implement Rate-Limiting and Exponential Backoff
+    - Wrap API calls in `AnthropicProvider` and `OpenAIProvider` with retry logic.
+    - Implement exponential backoff for HTTP 429 (Rate Limit) responses to prevent crashes during large batches.
 
 - [x] 6. Implement job search and filtering
   - [x] 6.1 Create `src/search_jobs.py` with `search_jobs()`, `_filter_jobs()`, and `_save_job()`
@@ -117,6 +120,18 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Test each filter rule independently with known fixtures
     - Test that `_save_job` writes files to the correct path structure
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6_
+  - [ ] 6.7 Add job type filtering
+    - Add `job_type: Optional[str] = None` to `SearchConfig` (and `config.yaml.example`).
+    - Update `src/search_jobs.py` to pass `job_type=config.search.job_type` to the scraper.
+  - [ ] 6.8 Implement Multi-Provider Concurrent Search
+    - Abstract the search provider logic so we can support other scrapers (e.g., SerpAPI, rapidAPI) alongside JobSpy.
+    - Use `concurrent.futures` or `asyncio` to run multiple search providers concurrently.
+    - Merge and deduplicate the `DataFrame` results returned by all providers.
+  - [ ] 6.9 Add Proxy Support for Scrapers
+    - Add an optional `proxies` field in `SearchConfig` to pass rotating proxies down to JobSpy and other search providers to avoid IP bans.
+  - [ ] 6.10 Add Keyword Exclusion Filtering
+    - Add an `exclude_keywords` list in `SearchConfig`.
+    - Update `_filter_jobs()` to drop any jobs containing those red-flag keywords (e.g. "US Citizen", "Clearance") in the description.
 
 - [x] 7. Checkpoint — Ensure all tests pass so far
   - Run `uv run pytest tests/unit/ tests/property/test_slug_properties.py tests/property/test_filter_properties.py tests/property/test_prompt_properties.py tests/property/test_search_output_properties.py -v`
@@ -209,6 +224,10 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - **Property 13: Metadata JSON contains all required fields after processing**
     - Use `job_strategy()` plus run context (provider, model, score); call `write_metadata_json()`; assert result JSON has exactly `job_slug`, `processed_at`, `provider`, `model`, `match_score`; assert `processed_at` matches ISO 8601 pattern
     - **Validates: Requirements 10.4**
+  - [ ] 13.3 Track LLM Token Usage and Estimated Cost
+    - Update `LLMProvider.complete()` to return both text and token usage statistics.
+    - Update `write_metadata_json()` to log the usage and estimated cost per job.
+    - Add a `--dry-run` flag to the CLI (`main.py`) to estimate tokens without executing actual API calls.
 
 - [ ] 14. Implement CLI entry point
   - [ ] 14.1 Create `main.py` with `argparse` CLI wiring
@@ -241,6 +260,21 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
 - [ ] 16. Final checkpoint — Ensure all tests pass
   - Run `uv run pytest tests/ -v`
   - Ensure all unit, property, and integration tests pass; ask the user if questions arise.
+
+## Phase 2: Local Web UI (Streamlit)
+
+- [ ] 17. Implement Streamlit Dashboard
+  - [ ] 17.1 Configuration Editor: UI to visually edit `SearchConfig` (keywords, location, proxy settings) instead of editing `config.yaml` manually.
+  - [ ] 17.2 Prompt & Base Resume Editor: Text area components to edit the base resume and prompt templates on the fly.
+  - [ ] 17.3 Job Review & Match Analysis: Display `tracker.csv` and new jobs in a Kanban board. Show the LLM Match Score alongside the job description.
+  - [ ] 17.4 PDF Previewer: Embed the generated output `resume.pdf` and `cover_letter.pdf` in the browser so users can verify it before applying.
+
+## Phase 3: Packaging & Distribution
+
+- [ ] 18. Create Standalone Executables
+  - [ ] 18.1 Package CLI with PyInstaller: Bundle the Python environment and CLI into a single `.exe` (Windows) and binary (macOS/Linux) so users don't need Python installed.
+  - [ ] 18.2 Package Web UI: Wrap the Streamlit UI into a desktop executable (using PyInstaller or PyWebView) so non-technical users can just double-click an icon to launch the dashboard.
+  - [ ] 18.3 Automated Build Pipeline: Set up GitHub Actions to automatically build and release the executables on every new version.
 
 ## Notes
 
