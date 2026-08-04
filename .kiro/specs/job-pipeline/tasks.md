@@ -290,10 +290,10 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
 
 ## Phase 4: Packaging & Distribution
 
-- [ ] 20. Create Standalone Executables
-  - [ ] 20.1 Package CLI with PyInstaller: Bundle the Python environment and CLI into a single `.exe` (Windows) and binary (macOS/Linux) so users don't need Python installed.
-  - [ ] 20.2 Package Web UI: Wrap the Streamlit UI into a desktop executable (using PyInstaller or PyWebView) so non-technical users can just double-click an icon to launch the dashboard.
-  - [ ] 20.3 Automated Build Pipeline: Set up GitHub Actions to automatically build and release the executables on every new version.
+- [x] 20. Create Standalone Executables
+  - [x] 20.1 Package CLI with PyInstaller: Bundle the Python environment and CLI into a single `.exe` (Windows) and binary (macOS/Linux) so users don't need Python installed.
+  - [x] 20.2 Package Web UI: Wrap the Streamlit UI into a desktop executable (using PyInstaller or PyWebView) so non-technical users can just double-click an icon to launch the dashboard.
+  - [x] 20.3 Automated Build Pipeline: Set up GitHub Actions to automatically build and release the executables on every new version.
 
 ## Notes
 

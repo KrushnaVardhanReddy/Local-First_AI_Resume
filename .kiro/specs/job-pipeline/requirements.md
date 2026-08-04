@@ -238,3 +238,42 @@ The Job Pipeline is a local-first, privacy-first Python pipeline that helps job 
 6. THE Pipeline SHALL accept a `--config` flag to specify an alternative config file path, defaulting to `users/{username}/config.yaml`.
 7. THE Pipeline SHALL accept a `--force` flag that bypasses Incremental_Processor checks and reprocesses all jobs for that user.
 8. WHEN any pipeline step raises an unhandled exception, THE Pipeline SHALL log the error with the username and job slug and continue processing remaining jobs rather than exiting.
+
+---
+
+### Requirement 14: Local Web UI (Streamlit)
+
+**User Story:** As a job seeker, I want a visual dashboard, so that I can easily configure my search, edit templates, review matching jobs, and preview generated PDFs.
+
+#### Acceptance Criteria
+
+1. THE Pipeline SHALL provide a local web UI built with Streamlit.
+2. THE Web UI SHALL include a Configuration Editor to visually edit `SearchConfig` (keywords, location, proxy settings) instead of editing `config.yaml` manually.
+3. THE Web UI SHALL include text area components to edit the base resume and prompt templates on the fly.
+4. THE Web UI SHALL display `tracker.csv` and new jobs in a Kanban board. Show the LLM Match Score alongside the job description.
+5. THE Web UI SHALL embed the generated `resume.pdf` and `cover_letter.pdf` in the browser so users can verify it before applying.
+
+---
+
+### Requirement 15: Model Context Protocol (MCP) Integration
+
+**User Story:** As an AI agent user, I want the pipeline to expose its capabilities as MCP tools and read from MCP servers.
+
+#### Acceptance Criteria
+
+1. THE Pipeline SHALL expose an MCP Server interface using the `mcp` Python SDK in `src/mcp_server.py`.
+2. THE MCP Server SHALL expose a `search_jobs` tool allowing external AI agents (like Claude Desktop) to trigger a job search and read the results.
+3. THE MCP Server SHALL expose a `tailor_resume` tool allowing external AI agents to trigger the pipeline for a specific job slug.
+4. THE Config SHALL optionally read the base resume from an external MCP server (e.g., pulling directly from the user's local Obsidian vault or Notion workspace instead of a static `resume.md` file).
+
+---
+
+### Requirement 16: Packaging & Distribution
+
+**User Story:** As a non-technical user, I want to download standalone executables, so that I can run the pipeline and Web UI without needing to install Python.
+
+#### Acceptance Criteria
+
+1. THE Pipeline SHALL provide standalone executables for the CLI bundled with PyInstaller into a single `.exe` (Windows) and binary (macOS/Linux).
+2. THE Pipeline SHALL provide standalone executables for the Streamlit Web UI wrapped into a desktop executable (using PyInstaller or PyWebView).
+3. THE Pipeline SHALL set up GitHub Actions to automatically build and release the executables on every new version.
