@@ -65,28 +65,28 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Use `@given(st.text(min_size=1), st.text(min_size=1))`; assert result contains neither `{{base_resume}}` nor `{{job_description}}`
     - **Validates: Requirements 11.2**
 
-- [ ] 5. Implement LLM provider abstraction
-  - [ ] 5.1 Create `src/llm/base.py` with `LLMProvider` ABC and `get_provider()` factory
+- [x] 5. Implement LLM provider abstraction
+  - [x] 5.1 Create `src/llm/base.py` with `LLMProvider` ABC and `get_provider()` factory
     - `LLMProvider`: abstract base class with `complete(self, prompt: str) -> str`
     - `get_provider(config: AppConfig) -> LLMProvider`: match `config.provider` to `lmstudio`, `ollama`, `anthropic`, `openai`; raise `ConfigError` for unknown values
     - _Requirements: 3.1, 3.6_
-  - [ ] 5.2 Create `src/llm/lmstudio_provider.py` with `LMStudioProvider`
+  - [x] 5.2 Create `src/llm/lmstudio_provider.py` with `LMStudioProvider`
     - Uses OpenAI-compatible chat completions endpoint at `config.base_url`
     - Raises `LLMError` with provider name and status code on HTTP/network failure
     - _Requirements: 3.2, 3.7_
-  - [ ] 5.3 Create `src/llm/ollama_provider.py` with `OllamaProvider`
+  - [x] 5.3 Create `src/llm/ollama_provider.py` with `OllamaProvider`
     - Posts to Ollama REST API at `config.base_url/api/generate`
     - Raises `LLMError` with provider name and status code on HTTP/network failure
     - _Requirements: 3.3, 3.7_
-  - [ ] 5.4 Create `src/llm/anthropic_provider.py` with `AnthropicProvider`
+  - [x] 5.4 Create `src/llm/anthropic_provider.py` with `AnthropicProvider`
     - Uses `anthropic` SDK, reads `ANTHROPIC_API_KEY` from environment
     - Raises `LLMError` with provider name on API failure
     - _Requirements: 3.4, 3.7_
-  - [ ] 5.5 Create `src/llm/openai_provider.py` with `OpenAIProvider`
+  - [x] 5.5 Create `src/llm/openai_provider.py` with `OpenAIProvider`
     - Uses `openai` SDK, reads `OPENAI_API_KEY` from environment
     - Raises `LLMError` with provider name on API failure
     - _Requirements: 3.5, 3.7_
-  - [ ]* 5.6 Write unit tests for LLM providers in `tests/unit/test_config.py`
+  - [x]* 5.6 Write unit tests for LLM providers in `tests/unit/test_config.py`
     - Test that `get_provider()` raises `ConfigError` for unknown provider string
     - Test that each provider is returned for its respective key
     - _Requirements: 3.6_
