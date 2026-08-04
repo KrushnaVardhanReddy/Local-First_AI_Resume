@@ -11,7 +11,10 @@ class OpenAIProvider(LLMProvider):
         api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
             raise LLMError("OPENAI_API_KEY environment variable not set")
-        self.client = openai.OpenAI(api_key=api_key)
+        self.client = openai.OpenAI(
+            api_key=api_key,
+            base_url=config.base_url if config.base_url else None
+        )
 
     def complete(self, prompt: str) -> LLMResponse:
         @retry(
