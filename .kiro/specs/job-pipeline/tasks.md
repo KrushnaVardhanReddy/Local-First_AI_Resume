@@ -273,11 +273,11 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
 
 ## Phase 2: Local Web UI (Streamlit)
 
-- [ ] 17. Implement Streamlit Dashboard
-  - [ ] 17.1 Configuration Editor: UI to visually edit `SearchConfig` (keywords, location, proxy settings) instead of editing `config.yaml` manually.
-  - [ ] 17.2 Prompt & Base Resume Editor: Text area components to edit the base resume and prompt templates on the fly.
-  - [ ] 17.3 Job Review & Match Analysis: Display `tracker.csv` and new jobs in a Kanban board. Show the LLM Match Score alongside the job description.
-  - [ ] 17.4 PDF Previewer: Embed the generated output `resume.pdf` and `cover_letter.pdf` in the browser so users can verify it before applying.
+- [x] 17. Implement Streamlit Dashboard
+  - [x] 17.1 Configuration Editor: UI to visually edit `SearchConfig` (keywords, location, proxy settings) instead of editing `config.yaml` manually.
+  - [x] 17.2 Prompt & Base Resume Editor: Text area components to edit the base resume and prompt templates on the fly.
+  - [x] 17.3 Job Review & Match Analysis: Display `tracker.csv` and new jobs in a Kanban board. Show the LLM Match Score alongside the job description.
+  - [x] 17.4 PDF Previewer: Embed the generated output `resume.pdf` and `cover_letter.pdf` in the browser so users can verify it before applying.
 
 ## Phase 3: Model Context Protocol (MCP) Integration
 
