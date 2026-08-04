@@ -281,12 +281,12 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
 
 ## Phase 3: Model Context Protocol (MCP) Integration
 
-- [ ] 18. Expose Pipeline as an MCP Server
-  - [ ] 18.1 Create `src/mcp_server.py`: Use the `mcp` Python SDK to expose our job search and resume tailoring functions as tools.
-  - [ ] 18.2 Expose `search_jobs` tool: Allow external AI agents (like Claude Desktop) to trigger a job search and read the results.
-  - [ ] 18.3 Expose `tailor_resume` tool: Allow external AI agents to trigger the pipeline for a specific job slug.
-- [ ] 19. Support MCP Clients for Base Resumes
-  - [ ] 19.1 Update config to optionally read the base resume from an external MCP server (e.g., pulling directly from the user's local Obsidian vault or Notion workspace instead of a static `resume.md` file).
+- [x] 18. Expose Pipeline as an MCP Server
+  - [x] 18.1 Create `src/mcp_server.py`: Use the `mcp` Python SDK to expose our job search and resume tailoring functions as tools.
+  - [x] 18.2 Expose `search_jobs` tool: Allow external AI agents (like Claude Desktop) to trigger a job search and read the results.
+  - [x] 18.3 Expose `tailor_resume` tool: Allow external AI agents to trigger the pipeline for a specific job slug.
+- [x] 19. Support MCP Clients for Base Resumes
+  - [x] 19.1 Update config to optionally read the base resume from an external MCP server (e.g., pulling directly from the user's local Obsidian vault or Notion workspace instead of a static `resume.md` file).
 
 ## Phase 4: Packaging & Distribution
 

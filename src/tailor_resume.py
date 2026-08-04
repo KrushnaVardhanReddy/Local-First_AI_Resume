@@ -1,5 +1,6 @@
 import re
 import logging
+import asyncio
 from pathlib import Path
 from src.config import AppConfig
 from src.exceptions import ValidationError, PromptError
@@ -7,10 +8,48 @@ from src.llm.base import LLMProvider
 from src.models import Job, MatchResult
 from src.utils import load_prompt
 
+from mcp.client.stdio import stdio_client, get_default_environment, StdioServerParameters
+from mcp.client.session import ClientSession
+
 AI_CLICHES = [
     "delve", "testament to", "innovative", "dynamic", "synergy",
     "leverage", "spearhead", "game-changer", "paradigm shift"
 ]
+
+async def _fetch_mcp_resume(command: str, args: list, uri: str) -> str:
+    server_params = StdioServerParameters(
+        command=command,
+        args=args,
+        env=get_default_environment()
+    )
+    async with stdio_client(server_params) as (read, write):
+        async with ClientSession(read, write) as session:
+            await session.initialize()
+            result = await session.read_resource(uri)
+            if not result.contents:
+                raise ValidationError(f"MCP resource at {uri} returned empty contents.")
+            return result.contents[0].text
+
+def _read_base_resume(config: AppConfig, user_dir: Path) -> str:
+    if config.mcp_base_resume:
+        try:
+            command = config.mcp_base_resume.get("command")
+            args = config.mcp_base_resume.get("args", [])
+            uri = config.mcp_base_resume.get("resource_uri")
+
+            if not command or not uri:
+                raise ValidationError("mcp_base_resume config missing 'command' or 'resource_uri'")
+
+            return asyncio.run(_fetch_mcp_resume(command, args, uri))
+        except Exception as e:
+            raise ValidationError(f"Failed to read base resume from MCP: {e}")
+
+    base_resume_path = user_dir / config.base_resume
+    try:
+        with open(base_resume_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except Exception as e:
+        raise ValidationError(f"Failed to read base resume from file: {e}")
 
 def check_ai_cliches(text: str) -> None:
     text_lower = text.lower()
@@ -25,12 +64,7 @@ def tailor_resume(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider)
     job_output_dir = user_dir / config.output_dir / job.slug
     job_output_dir.mkdir(parents=True, exist_ok=True)
 
-    base_resume_path = user_dir / config.base_resume
-    try:
-        with open(base_resume_path, "r", encoding="utf-8") as f:
-            base_resume = f.read()
-    except Exception as e:
-        raise ValidationError(f"Failed to read base resume: {e}")
+    base_resume = _read_base_resume(config, user_dir)
 
     job_md_path = job_output_dir / "job.md"
     try:
@@ -106,12 +140,7 @@ def analyze_match(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider)
     job_output_dir = user_dir / config.output_dir / job.slug
     job_output_dir.mkdir(parents=True, exist_ok=True)
 
-    base_resume_path = user_dir / config.base_resume
-    try:
-        with open(base_resume_path, "r", encoding="utf-8") as f:
-            base_resume = f.read()
-    except Exception as e:
-        raise ValidationError(f"Failed to read base resume: {e}")
+    base_resume = _read_base_resume(config, user_dir)
 
     job_md_path = job_output_dir / "job.md"
     try:

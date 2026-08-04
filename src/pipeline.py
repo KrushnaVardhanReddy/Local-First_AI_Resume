@@ -30,7 +30,7 @@ def write_metadata_json(job: Job, match: MatchResult, config: AppConfig, output_
     with open(output_dir / "metadata.json", "w", encoding="utf-8") as f:
         json.dump(metadata, f, indent=2)
 
-def run_tailor(config: AppConfig, user_dir: Path, force: bool = False, dry_run: bool = False) -> None:
+def run_tailor(config: AppConfig, user_dir: Path, force: bool = False, dry_run: bool = False, job_slug: str | None = None) -> None:
     processed_ids = load_processed_ids(user_dir)
     output_base_dir = user_dir / config.output_dir
     llm = get_provider(config)
@@ -46,6 +46,9 @@ def run_tailor(config: AppConfig, user_dir: Path, force: bool = False, dry_run: 
     for job_file in job_files:
         job_dir = job_file.parent
         slug = job_dir.name
+
+        if job_slug and slug != job_slug:
+            continue
 
         try:
             with open(job_file, "r", encoding="utf-8") as f:

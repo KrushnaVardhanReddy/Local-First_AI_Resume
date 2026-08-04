@@ -32,6 +32,7 @@ class AppConfig:
     search: SearchConfig
     pdf: PdfConfig = field(default_factory=PdfConfig)
     base_url: Optional[str] = None
+    mcp_base_resume: Optional[dict] = None
 
 def load_config(config_path: Path) -> AppConfig:
     load_dotenv()
@@ -86,5 +87,6 @@ def load_config(config_path: Path) -> AppConfig:
         output_dir=data['output_dir'],
         search=search_config,
         pdf=pdf_config,
-        base_url=data.get('base_url')
+        base_url=data.get('base_url'),
+        mcp_base_resume=data.get('mcp_base_resume')
     )
