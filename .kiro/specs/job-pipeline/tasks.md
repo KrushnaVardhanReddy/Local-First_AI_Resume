@@ -259,6 +259,9 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Verify tracker updated with correct row
     - Verify `--force` flag causes already-processed jobs to be reprocessed
     - _Requirements: 2.4, 4.4, 5.4, 6.4, 7.1, 7.2, 8.1, 10.3, 10.5, 13.7_
+  - [ ] 15.3 Create `tests/integration/test_pluggable_templates.py`
+    - Verify that placing a mock LaTeX theme in `users/{username}/templates/` allows RenderCV to load it without error.
+    - Verify that placing a mock `resume.md` in `users/{username}/prompts/` overrides the default `prompts/resume.md` file correctly.
 
 - [ ] 16. Support Pluggable Community Templates and Add-ons
   - [ ] 16.1 Custom RenderCV Themes: Ensure the architecture supports loading custom RenderCV theme folders from a `users/{username}/templates/` directory so users can install third-party PDF themes.
