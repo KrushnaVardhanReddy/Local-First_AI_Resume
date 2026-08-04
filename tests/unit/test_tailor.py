@@ -3,6 +3,7 @@ from pathlib import Path
 from src.models import Job
 from src.config import AppConfig, SearchConfig
 from src.tailor_resume import tailor_resume, generate_cover_letter
+from src.exceptions import ValidationError
 
 class StubLLM:
     def __init__(self, response):
@@ -58,3 +59,23 @@ def test_generate_cover_letter_writes_valid_content(tmp_path: Path):
     assert output_path.exists()
     assert output_path.name == "cover_letter.md"
     assert output_path.read_text() == valid_content
+
+def test_ai_cliche_filter_raises_validation_error(tmp_path: Path):
+    job = Job("Test", "Company", "Loc", 10, 100, "url", "desc")
+    config = AppConfig(
+        provider="dummy",
+        model="dummy",
+        base_resume="base.md",
+        output_dir=str(tmp_path / "output"),
+        search=SearchConfig("keys", "loc", True, 10)
+    )
+
+    (tmp_path / "base.md").write_text("base resume content")
+    (tmp_path / "prompts").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "prompts" / "resume.md").write_text("dummy prompt")
+
+    cliche_content = "This is a long enough resume that decides to delve into the innovative and dynamic synergy of things."
+    llm = StubLLM(cliche_content)
+
+    with pytest.raises(ValidationError, match="too many AI clichés"):
+        tailor_resume(job, config, tmp_path, llm)

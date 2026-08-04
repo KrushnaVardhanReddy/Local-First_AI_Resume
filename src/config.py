@@ -15,6 +15,9 @@ class SearchConfig:
     results_wanted: int
     min_salary: Optional[int] = None
     exclude_companies: List[str] = field(default_factory=list)
+    job_type: Optional[str] = None
+    proxies: List[str] = field(default_factory=list)
+    exclude_keywords: List[str] = field(default_factory=list)
 
 @dataclass
 class PdfConfig:
@@ -65,7 +68,10 @@ def load_config(config_path: Path) -> AppConfig:
         remote=bool(search_data['remote']),
         results_wanted=int(search_data['results_wanted']),
         min_salary=search_data.get('min_salary'),
-        exclude_companies=search_data.get('exclude_companies', [])
+        exclude_companies=search_data.get('exclude_companies', []),
+        job_type=search_data.get('job_type'),
+        proxies=search_data.get('proxies', []),
+        exclude_keywords=search_data.get('exclude_keywords', [])
     )
 
     pdf_data = data.get('pdf', {})
