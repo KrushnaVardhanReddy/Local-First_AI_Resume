@@ -17,7 +17,7 @@ def test_md_to_rendercv_yaml():
 def test_render_error_raised_when_markdown_missing(tmp_path):
     job = None
     with pytest.raises(RenderError, match="Source markdown file missing"):
-        render_resume_pdf(job, tmp_path, "classic")
+        render_resume_pdf(job, tmp_path, "classic", tmp_path)
 
 def test_render_error_raised_when_rendercv_exits_nonzero(tmp_path, monkeypatch):
     job = None
@@ -33,4 +33,4 @@ def test_render_error_raised_when_rendercv_exits_nonzero(tmp_path, monkeypatch):
     monkeypatch.setattr(subprocess, "run", fake_run)
 
     with pytest.raises(RenderError, match="RenderCV exited with code 1"):
-        render_resume_pdf(job, tmp_path, "classic")
+            render_resume_pdf(job, tmp_path, "classic", tmp_path)

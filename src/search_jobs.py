@@ -3,17 +3,18 @@ from pathlib import Path
 import pandas as pd
 import concurrent.futures
 from abc import ABC, abstractmethod
+from datetime import datetime, timezone
 from jobspy import scrape_jobs
 from .models import Job
 from .config import AppConfig
 
 class SearchProvider(ABC):
     @abstractmethod
-    def search(self, config: AppConfig) -> pd.DataFrame:
+    def search(self, config: AppConfig, hours_old: int | None = None) -> pd.DataFrame:
         pass
 
 class JobspyProvider(SearchProvider):
-    def search(self, config: AppConfig) -> pd.DataFrame:
+    def search(self, config: AppConfig, hours_old: int | None = None) -> pd.DataFrame:
         kwargs = {
             "site_name": ["linkedin", "indeed", "glassdoor", "zip_recruiter"],
             "search_term": config.search.keywords,
@@ -25,6 +26,8 @@ class JobspyProvider(SearchProvider):
             kwargs["job_type"] = config.search.job_type
         if config.search.proxies:
             kwargs["proxies"] = config.search.proxies
+        if hours_old is not None:
+            kwargs["hours_old"] = hours_old
 
         return scrape_jobs(**kwargs)
 
@@ -101,9 +104,24 @@ def _save_job(job: Job, output_dir: Path) -> None:
 def search_jobs(config: AppConfig, user_dir: Path) -> list[Job]:
     providers = [JobspyProvider()]
 
+    last_search_path = user_dir / "last_search.json"
+    hours_old = None
+    if last_search_path.exists():
+        try:
+            with open(last_search_path, "r", encoding="utf-8") as f:
+                last_search_data = json.load(f)
+            last_search_time = datetime.fromisoformat(last_search_data["timestamp"])
+            now = datetime.now(timezone.utc)
+            delta = now - last_search_time
+            hours_old = int(delta.total_seconds() / 3600)
+            if hours_old < 1:
+                hours_old = 1 # At least 1 hour
+        except Exception as e:
+            print(f"Error reading last_search.json: {e}")
+
     dfs = []
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        future_to_provider = {executor.submit(p.search, config): p for p in providers}
+        future_to_provider = {executor.submit(p.search, config, hours_old): p for p in providers}
         for future in concurrent.futures.as_completed(future_to_provider):
             try:
                 df = future.result()
@@ -134,5 +152,12 @@ def search_jobs(config: AppConfig, user_dir: Path) -> list[Job]:
         )
         _save_job(job, output_dir)
         accepted_jobs.append(job)
+
+    # Write last_search.json
+    try:
+        with open(last_search_path, "w", encoding="utf-8") as f:
+            json.dump({"timestamp": datetime.now(timezone.utc).isoformat()}, f, indent=2)
+    except Exception as e:
+        print(f"Error writing last_search.json: {e}")
 
     return accepted_jobs
