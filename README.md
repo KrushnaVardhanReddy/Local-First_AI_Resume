@@ -375,17 +375,53 @@ It serves as a reusable engine for AI-assisted job applications rather than anot
 
 ---
 
-# MVP Scope
+# MVP Scope (Phase 1 — CLI Pipeline)
 
-* JobSpy integration
-* Resume tailoring
+* JobSpy integration (Indeed + LinkedIn)
+* Resume tailoring via local or cloud LLM
 * Cover letter generation
-* Match notes
+* Match notes with score (0–100)
 * Markdown generation
-* PDF generation
-* Local/cloud LLM support
+* PDF generation via RenderCV (ATS-friendly) + WeasyPrint
+* Local/cloud LLM support (LM Studio, Ollama, Anthropic, OpenAI)
 * Markdown + CSV tracker
-* Incremental processing
+* Incremental processing (skip already-processed jobs)
 * Multiple resume profiles
+* Multi-user support (`users/{username}/` isolation)
 
 Everything else can be added incrementally in future releases.
+
+---
+
+# Phase 2 — Local Web UI (Streamlit)
+
+Once the CLI pipeline is stable, a lightweight local web UI will be added as an optional layer on top. The core pipeline stays untouched — the UI simply wraps it.
+
+## Why
+
+The CLI is sufficient for developers, but non-technical users (e.g. a pharma researcher sharing the same machine) benefit from a visual interface for the most interactive parts of the workflow.
+
+## Planned UI surfaces
+
+**Job Review Dashboard**
+After a search run, display all found jobs in a filterable table. Allow the user to deselect irrelevant jobs before triggering tailoring — avoiding wasted LLM calls.
+
+**Tracker Dashboard**
+Replace the raw markdown table with a visual tracker. Toggle application status (Applied → Interview → Offer) with one click. Filter and sort by match score, company, or date.
+
+**User Setup Wizard**
+Guide a new user through creating their profile: enter username, upload resume, fill in `config.yaml` fields via a form. No file editing required.
+
+## Tech stack
+
+* **Streamlit** — pure Python, fits the existing stack, no JS needed
+* Runs locally: `uv run main.py --user {username} ui` → opens `localhost:8501`
+* No data leaves the machine
+
+## How to launch (future)
+
+```bash
+uv run main.py --user krushna ui
+```
+
+This will be implemented as a separate spec (`ui-dashboard`) once Phase 1 is complete.
