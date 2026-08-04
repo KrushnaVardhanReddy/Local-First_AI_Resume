@@ -118,7 +118,7 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Test that `_save_job` writes files to the correct path structure
     - _Requirements: 1.2, 1.3, 1.4, 1.5, 1.6_
 
-- [ ] 7. Checkpoint — Ensure all tests pass so far
+- [x] 7. Checkpoint — Ensure all tests pass so far
   - Run `uv run pytest tests/unit/ tests/property/test_slug_properties.py tests/property/test_filter_properties.py tests/property/test_prompt_properties.py tests/property/test_search_output_properties.py -v`
   - Ensure all tests pass; ask the user if questions arise.
 
