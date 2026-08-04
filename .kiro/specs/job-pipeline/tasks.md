@@ -122,34 +122,34 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
   - Run `uv run pytest tests/unit/ tests/property/test_slug_properties.py tests/property/test_filter_properties.py tests/property/test_prompt_properties.py tests/property/test_search_output_properties.py -v`
   - Ensure all tests pass; ask the user if questions arise.
 
-- [ ] 8. Implement incremental processor
-  - [ ] 8.1 Create incremental-processing functions in `src/pipeline.py` (or a dedicated `src/incremental.py` that `pipeline.py` imports)
+- [x] 8. Implement incremental processor
+  - [x] 8.1 Create incremental-processing functions in `src/pipeline.py` (or a dedicated `src/incremental.py` that `pipeline.py` imports)
     - `load_processed_ids(user_dir) -> set[str]`: read `processed_jobs.json`; create with empty list if missing; return set of IDs
     - `is_processed(job_id, processed_ids) -> bool`: return `job_id in processed_ids`
     - `mark_processed(job_id, user_dir) -> None`: append job ID to `processed_jobs.json` (read → append → write)
     - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
-  - [ ]* 8.2 Write property test P7 — incremental processor never reprocesses in `tests/property/test_incremental_properties.py`
+  - [x]* 8.2 Write property test P7 — incremental processor never reprocesses in `tests/property/test_incremental_properties.py`
     - **Property 7: Incremental processor never reprocesses a seen job**
     - Use `st.sets(st.text())` for processed IDs and `st.text()` for a known ID in the set; assert `is_processed` returns True and job is skipped
     - **Validates: Requirements 2.2, 2.3**
-  - [ ]* 8.3 Write unit test that `processed_jobs.json` is created with empty list when missing in `tests/unit/test_utils.py`
+  - [x]* 8.3 Write unit test that `processed_jobs.json` is created with empty list when missing in `tests/unit/test_utils.py`
     - _Requirements: 2.5_
 
-- [ ] 9. Implement resume tailor, cover letter generator, and match analyzer
-  - [ ] 9.1 Create `src/tailor_resume.py` with `tailor_resume()`, `generate_cover_letter()`, and `analyze_match()`
+- [x] 9. Implement resume tailor, cover letter generator, and match analyzer
+  - [x] 9.1 Create `src/tailor_resume.py` with `tailor_resume()`, `generate_cover_letter()`, and `analyze_match()`
     - `tailor_resume(job, config, user_dir, llm)`: load base resume and `job.md`; call `load_prompt("resume.md", ...)`; call `llm.complete()`; raise `ValidationError` if response `< 50 chars`; write `resume.md` to job output dir; return path
     - `generate_cover_letter(job, config, user_dir, llm)`: load tailored `resume.md` and `job.md`; call `load_prompt("cover_letter.md", ...)`; call `llm.complete()`; raise `ValidationError` if response `< 50 chars`; write `cover_letter.md`; return path
     - `analyze_match(job, config, user_dir, llm)`: load base resume and `job.md`; call `load_prompt("match_notes.md", ...)`; call `llm.complete()`; parse integer score, clamp to [0, 100] with warning log if outside; write `match_notes.md`; return `MatchResult`
     - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 5.1, 5.2, 5.3, 5.4, 5.5, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6_
-  - [ ]* 9.2 Write property test P6 — match score bounds in `tests/property/test_match_properties.py`
+  - [x]* 9.2 Write property test P6 — match score bounds in `tests/property/test_match_properties.py`
     - **Property 6: Match score is always within bounds**
     - Use `@given(st.text())` as raw LLM response; verify `MatchResult.score` is in `[0, 100]`
     - **Validates: Requirements 6.3, 6.5**
-  - [ ]* 9.3 Write property test P9 — LLM response length guard in `tests/property/test_llm_guard_properties.py`
+  - [x]* 9.3 Write property test P9 — LLM response length guard in `tests/property/test_llm_guard_properties.py`
     - **Property 9: LLM response length guard prevents empty file writes**
     - Use `@given(st.text(max_size=49))` as LLM response; assert `ValidationError` is raised and no file is written to output dir
     - **Validates: Requirements 4.5, 5.5**
-  - [ ]* 9.4 Write unit tests for `src/tailor_resume.py` in `tests/unit/test_tailor.py` and `tests/unit/test_match.py`
+  - [x]* 9.4 Write unit tests for `src/tailor_resume.py` in `tests/unit/test_tailor.py` and `tests/unit/test_match.py`
     - Test `tailor_resume` writes `resume.md` with valid content using a stub LLM
     - Test `generate_cover_letter` writes `cover_letter.md` with valid content
     - Test `analyze_match` returns `MatchResult` with score, strong matches, gaps, suggestions
