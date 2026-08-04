@@ -11,7 +11,8 @@ class StubLLM:
     def __init__(self, response):
         self.response = response
     def complete(self, prompt):
-        return self.response
+        from src.llm.base import LLMResponse
+        return LLMResponse(text=self.response, usage={"test": 0})
 
 @given(st.text())
 def test_match_score_is_always_within_bounds(response_text):
@@ -38,6 +39,6 @@ def test_match_score_is_always_within_bounds(response_text):
 
         llm = StubLLM(response_text)
 
-        result = analyze_match(job, config, tmp_path, llm)
+        result, usage = analyze_match(job, config, tmp_path, llm)
 
         assert 0 <= result.score <= 100

@@ -9,7 +9,8 @@ class StubLLM:
     def __init__(self, response):
         self.response = response
     def complete(self, prompt):
-        return self.response
+        from src.llm.base import LLMResponse
+        return LLMResponse(text=self.response, usage={"test": 0})
 
 def test_tailor_resume_writes_valid_content(tmp_path: Path):
     job = Job("Test", "Company", "Loc", 10, 100, "url", "desc")
@@ -28,7 +29,7 @@ def test_tailor_resume_writes_valid_content(tmp_path: Path):
     valid_content = "This is a valid tailored resume that is long enough to pass the guard of 50 characters."
     llm = StubLLM(valid_content)
 
-    output_path = tailor_resume(job, config, tmp_path, llm)
+    output_path, usage = tailor_resume(job, config, tmp_path, llm)
 
     assert output_path.exists()
     assert output_path.name == "resume.md"
@@ -54,7 +55,7 @@ def test_generate_cover_letter_writes_valid_content(tmp_path: Path):
     valid_content = "This is a valid cover letter that is long enough to pass the length guard of 50 characters."
     llm = StubLLM(valid_content)
 
-    output_path = generate_cover_letter(job, config, tmp_path, llm)
+    output_path, usage = generate_cover_letter(job, config, tmp_path, llm)
 
     assert output_path.exists()
     assert output_path.name == "cover_letter.md"

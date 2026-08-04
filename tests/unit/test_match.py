@@ -8,7 +8,8 @@ class StubLLM:
     def __init__(self, response):
         self.response = response
     def complete(self, prompt):
-        return self.response
+        from src.llm.base import LLMResponse
+        return LLMResponse(text=self.response, usage={"test": 0})
 
 def test_analyze_match_returns_match_result(tmp_path: Path):
     job = Job("Test", "Company", "Loc", 10, 100, "url", "desc")
@@ -27,7 +28,7 @@ def test_analyze_match_returns_match_result(tmp_path: Path):
     llm_response = "Here are the match notes.\nScore: 85\nStrong Matches: Python\nGaps: Java\nSuggestions: Learn Java"
     llm = StubLLM(llm_response)
 
-    result = analyze_match(job, config, tmp_path, llm)
+    result, usage = analyze_match(job, config, tmp_path, llm)
 
     assert isinstance(result, MatchResult)
     assert result.score == 85

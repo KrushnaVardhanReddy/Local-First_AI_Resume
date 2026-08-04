@@ -11,7 +11,8 @@ class StubLLM:
     def __init__(self, response):
         self.response = response
     def complete(self, prompt):
-        return self.response
+        from src.llm.base import LLMResponse
+        return LLMResponse(text=self.response, usage={"test": 0})
 
 @given(st.text(max_size=49))
 def test_llm_response_length_guard(response_text):
