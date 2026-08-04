@@ -279,21 +279,21 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
   - [ ] 17.3 Job Review & Match Analysis: Display `tracker.csv` and new jobs in a Kanban board. Show the LLM Match Score alongside the job description.
   - [ ] 17.4 PDF Previewer: Embed the generated output `resume.pdf` and `cover_letter.pdf` in the browser so users can verify it before applying.
 
-## Phase 3: Packaging & Distribution
+## Phase 3: Model Context Protocol (MCP) Integration
 
-- [ ] 18. Create Standalone Executables
-  - [ ] 18.1 Package CLI with PyInstaller: Bundle the Python environment and CLI into a single `.exe` (Windows) and binary (macOS/Linux) so users don't need Python installed.
-  - [ ] 18.2 Package Web UI: Wrap the Streamlit UI into a desktop executable (using PyInstaller or PyWebView) so non-technical users can just double-click an icon to launch the dashboard.
-  - [ ] 18.3 Automated Build Pipeline: Set up GitHub Actions to automatically build and release the executables on every new version.
+- [ ] 18. Expose Pipeline as an MCP Server
+  - [ ] 18.1 Create `src/mcp_server.py`: Use the `mcp` Python SDK to expose our job search and resume tailoring functions as tools.
+  - [ ] 18.2 Expose `search_jobs` tool: Allow external AI agents (like Claude Desktop) to trigger a job search and read the results.
+  - [ ] 18.3 Expose `tailor_resume` tool: Allow external AI agents to trigger the pipeline for a specific job slug.
+- [ ] 19. Support MCP Clients for Base Resumes
+  - [ ] 19.1 Update config to optionally read the base resume from an external MCP server (e.g., pulling directly from the user's local Obsidian vault or Notion workspace instead of a static `resume.md` file).
 
-## Phase 4: Model Context Protocol (MCP) Integration
+## Phase 4: Packaging & Distribution
 
-- [ ] 19. Expose Pipeline as an MCP Server
-  - [ ] 19.1 Create `src/mcp_server.py`: Use the `mcp` Python SDK to expose our job search and resume tailoring functions as tools.
-  - [ ] 19.2 Expose `search_jobs` tool: Allow external AI agents (like Claude Desktop) to trigger a job search and read the results.
-  - [ ] 19.3 Expose `tailor_resume` tool: Allow external AI agents to trigger the pipeline for a specific job slug.
-- [ ] 20. Support MCP Clients for Base Resumes
-  - [ ] 20.1 Update config to optionally read the base resume from an external MCP server (e.g., pulling directly from the user's local Obsidian vault or Notion workspace instead of a static `resume.md` file).
+- [ ] 20. Create Standalone Executables
+  - [ ] 20.1 Package CLI with PyInstaller: Bundle the Python environment and CLI into a single `.exe` (Windows) and binary (macOS/Linux) so users don't need Python installed.
+  - [ ] 20.2 Package Web UI: Wrap the Streamlit UI into a desktop executable (using PyInstaller or PyWebView) so non-technical users can just double-click an icon to launch the dashboard.
+  - [ ] 20.3 Automated Build Pipeline: Set up GitHub Actions to automatically build and release the executables on every new version.
 
 ## Notes
 
