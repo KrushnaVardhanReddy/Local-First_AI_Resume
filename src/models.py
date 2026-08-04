@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 import hashlib
 from typing import Optional
-from src.utils import make_job_slug
+from .utils import make_job_slug
 
 @dataclass
 class Job:

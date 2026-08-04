@@ -33,6 +33,8 @@ venv.bak/
 
 # Environment variables
 .env
+.env.*
+!.env.example
 
 # Pytest
 .pytest_cache/

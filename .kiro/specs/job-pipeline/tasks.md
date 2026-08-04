@@ -6,7 +6,7 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
 
 ## Tasks
 
-- [ ] 1. Set up project structure and core foundation
+- [x] 1. Set up project structure and core foundation
   - Create `pyproject.toml` with `uv` project metadata, Python ≥ 3.10 constraint, and dependencies: `python-jobspy`, `hypothesis`, `pytest`, `weasyprint`, `markdown`, `python-dotenv`, `pyyaml`, `anthropic`, `openai`, `requests`
   - Create `uv.lock` by running `uv lock`
   - Create `.env.example` with `ANTHROPIC_API_KEY=` and `OPENAI_API_KEY=` placeholders
@@ -16,14 +16,14 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
   - Create `users/` directory entry in `.gitignore`
   - _Requirements: 9.1, 9.2, 11.1, 11.4, 14.8_
 
-- [ ] 2. Implement data models and exception classes
-  - [ ] 2.1 Create `src/models.py` with `Job` and `MatchResult` dataclasses
+- [x] 2. Implement data models and exception classes
+  - [x] 2.1 Create `src/models.py` with `Job` and `MatchResult` dataclasses
     - `Job`: fields `id`, `title`, `company`, `location`, `salary_min`, `salary_max`, `source_url`, `description`, `slug`
     - `MatchResult`: fields `score`, `strong_matches`, `gaps`, `suggestions`, `raw_text`
     - `Job.id` is a 16-char hex string computed as `sha256(company + title + source_url)[:16]`
     - `Job.slug` is derived by calling `make_job_slug(company, title)`
     - _Requirements: 1.7, 6.3, 10.1_
-  - [ ] 2.2 Create `src/exceptions.py` with six exception classes
+  - [x] 2.2 Create `src/exceptions.py` with six exception classes
     - `ConfigError`, `UserError`, `LLMError`, `RenderError`, `PromptError`, `ValidationError`
     - Each inherits from `Exception`; include a docstring describing when it is raised
     - _Requirements: 3.6, 3.7, 9.4, 13.8_
