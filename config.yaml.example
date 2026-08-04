@@ -1,0 +1,17 @@
+provider: lmstudio          # lmstudio | ollama | anthropic | openai
+model: qwen3-8b
+base_url: http://localhost:1234/v1   # required for lmstudio/ollama
+base_resume: resumes/backend.md
+output_dir: output/
+
+pdf:
+  theme: sb2nov             # classic | moderncv | sb2nov | engineeringresumes | engineeringclassic
+
+search:
+  keywords: "backend engineer python"
+  location: "Remote"
+  remote: true
+  results_wanted: 20
+  min_salary: 100000        # optional
+  exclude_companies:        # optional
+    - "Acme Corp"
