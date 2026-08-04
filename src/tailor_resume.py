@@ -18,8 +18,10 @@ def check_ai_cliches(text: str) -> None:
     if cliche_count > 2:
         raise ValidationError(f"LLM response contains too many AI clichés ({cliche_count})")
 
-def tailor_resume(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider) -> Path:
-    """Tailors a resume using an LLM and saves it to the output dir."""
+from typing import Tuple
+
+def tailor_resume(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider) -> Tuple[Path, dict]:
+    """Tailors a resume using an LLM and saves it to the output dir. Returns path and token usage."""
     job_output_dir = Path(config.output_dir) / job.slug
     job_output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -44,21 +46,23 @@ def tailor_resume(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider)
     }
 
     prompt = load_prompt("resume.md", user_dir, variables)
-    response = llm.complete(prompt)
+    llm_response = llm.complete(prompt)
+    response_text = llm_response.text
+    usage = llm_response.usage
 
-    if len(response) < 50:
+    if len(response_text) < 50:
         raise ValidationError("LLM response too short (< 50 chars)")
 
-    check_ai_cliches(response)
+    check_ai_cliches(response_text)
 
     output_path = job_output_dir / "resume.md"
     with open(output_path, "w", encoding="utf-8") as f:
-        f.write(response)
+        f.write(response_text)
 
-    return output_path
+    return output_path, usage
 
-def generate_cover_letter(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider) -> Path:
-    """Generates a cover letter using an LLM and saves it to the output dir."""
+def generate_cover_letter(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider) -> Tuple[Path, dict]:
+    """Generates a cover letter using an LLM and saves it to the output dir. Returns path and token usage."""
     job_output_dir = Path(config.output_dir) / job.slug
     job_output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -82,21 +86,23 @@ def generate_cover_letter(job: Job, config: AppConfig, user_dir: Path, llm: LLMP
     }
 
     prompt = load_prompt("cover_letter.md", user_dir, variables)
-    response = llm.complete(prompt)
+    llm_response = llm.complete(prompt)
+    response_text = llm_response.text
+    usage = llm_response.usage
 
-    if len(response) < 50:
+    if len(response_text) < 50:
         raise ValidationError("LLM response too short (< 50 chars)")
 
-    check_ai_cliches(response)
+    check_ai_cliches(response_text)
 
     output_path = job_output_dir / "cover_letter.md"
     with open(output_path, "w", encoding="utf-8") as f:
-        f.write(response)
+        f.write(response_text)
 
-    return output_path
+    return output_path, usage
 
-def analyze_match(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider) -> MatchResult:
-    """Analyzes job match using an LLM, returning a MatchResult and writing notes."""
+def analyze_match(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider) -> Tuple[MatchResult, dict]:
+    """Analyzes job match using an LLM, returning a MatchResult and token usage."""
     job_output_dir = Path(config.output_dir) / job.slug
     job_output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -120,14 +126,16 @@ def analyze_match(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider)
     }
 
     prompt = load_prompt("match_notes.md", user_dir, variables)
-    response = llm.complete(prompt)
+    llm_response = llm.complete(prompt)
+    response_text = llm_response.text
+    usage = llm_response.usage
 
-    match = re.search(r'(?i)(?:score|match)[\s:]*(\d{1,3})', response)
+    match = re.search(r'(?i)(?:score|match)[\s:]*(\d{1,3})', response_text)
     if match:
         score = int(match.group(1))
     else:
         # Fallback to just finding the first number if format differs
-        nums = re.findall(r'\b\d{1,3}\b', response)
+        nums = re.findall(r'\b\d{1,3}\b', response_text)
         score = int(nums[0]) if nums else 0
 
     if not (0 <= score <= 100):
@@ -136,14 +144,15 @@ def analyze_match(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider)
 
     output_path = job_output_dir / "match_notes.md"
     with open(output_path, "w", encoding="utf-8") as f:
-        f.write(response)
+        f.write(response_text)
 
     # We will assume LLM output contains text we can just pass through for now,
     # as splitting it cleanly depends on prompt structure.
-    return MatchResult(
+    match_result = MatchResult(
         score=score,
         strong_matches=[],
         gaps=[],
         suggestions=[],
-        raw_text=response
+        raw_text=response_text
     )
+    return match_result, usage

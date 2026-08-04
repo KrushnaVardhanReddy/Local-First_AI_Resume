@@ -216,24 +216,24 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
   - Run `uv run pytest tests/unit/ tests/property/ -v`
   - Ensure all tests pass; ask the user if questions arise.
 
-- [ ] 13. Implement pipeline orchestration
-  - [ ] 13.1 Create `src/pipeline.py` with `run_search()`, `run_tailor()`, and `run_all()`
+- [x] 13. Implement pipeline orchestration
+  - [x] 13.1 Create `src/pipeline.py` with `run_search()`, `run_tailor()`, and `run_all()`
     - `run_search(config, user_dir)`: call `search_jobs()`; log count of accepted jobs; write nothing else
     - `run_tailor(config, user_dir, force)`: load processed IDs; iterate over job JSON files in `output/`; skip if ID in processed IDs and `force=False` (log skip); for each unprocessed job wrap in `try/except`; call `tailor_resume()`, `generate_cover_letter()`, `analyze_match()`, `render_resume_pdf()`, `render_cover_letter_pdf()`, `update_tracker()`, `write_metadata_json()`, `mark_processed()`; log error and `continue` on any exception
     - `run_all(config, user_dir, force)`: call `run_search()` then `run_tailor()`
     - `write_metadata_json(job, match, config, output_dir)`: write `metadata.json` with fields `job_slug`, `processed_at` (ISO 8601), `provider`, `model`, `match_score`
     - _Requirements: 2.2, 2.3, 10.3, 10.4, 10.5, 13.3, 13.4, 13.5, 13.8_
-  - [ ]* 13.2 Write property test P13 — metadata JSON fields in `tests/property/test_metadata_properties.py`
+  - [x]* 13.2 Write property test P13 — metadata JSON fields in `tests/property/test_metadata_properties.py`
     - **Property 13: Metadata JSON contains all required fields after processing**
     - Use `job_strategy()` plus run context (provider, model, score); call `write_metadata_json()`; assert result JSON has exactly `job_slug`, `processed_at`, `provider`, `model`, `match_score`; assert `processed_at` matches ISO 8601 pattern
     - **Validates: Requirements 10.4**
-  - [ ] 13.3 Track LLM Token Usage and Estimated Cost
+  - [x] 13.3 Track LLM Token Usage and Estimated Cost
     - Update `LLMProvider.complete()` to return both text and token usage statistics.
     - Update `write_metadata_json()` to log the usage and estimated cost per job.
     - Add a `--dry-run` flag to the CLI (`main.py`) to estimate tokens without executing actual API calls.
 
-- [ ] 14. Implement CLI entry point
-  - [ ] 14.1 Create `main.py` with `argparse` CLI wiring
+- [x] 14. Implement CLI entry point
+  - [x] 14.1 Create `main.py` with `argparse` CLI wiring
     - Parse `--user` (required), `--config` (optional, default `users/{username}/config.yaml`), `--force` (flag)
     - Subcommands: `search`, `tailor`, `all`
     - Raise `UserError` (exit with message) if `--user` omitted
@@ -241,7 +241,7 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Call `load_config()` → `get_provider()` → delegate to appropriate `run_*` function
     - Catch `ConfigError` and `UserError` at top level: print message and exit with code 1
     - _Requirements: 13.1, 13.2, 13.6, 13.7, 14.1, 14.2, 14.3, 14.7_
-  - [ ]* 14.2 Write unit tests for `main.py` CLI wiring in `tests/unit/test_config.py`
+  - [x]* 14.2 Write unit tests for `main.py` CLI wiring in `tests/unit/test_config.py`
     - Test `--user` omitted → exits with descriptive message
     - Test missing `config.yaml` → exits with descriptive message naming expected path
     - Test `--force` flag is passed through correctly

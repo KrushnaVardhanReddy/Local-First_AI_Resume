@@ -2,9 +2,16 @@ from abc import ABC, abstractmethod
 from src.config import AppConfig
 from src.exceptions import ConfigError
 
+from dataclasses import dataclass, field
+
+@dataclass
+class LLMResponse:
+    text: str
+    usage: dict = field(default_factory=dict)
+
 class LLMProvider(ABC):
     @abstractmethod
-    def complete(self, prompt: str) -> str:
+    def complete(self, prompt: str) -> LLMResponse:
         """Generates a completion from the LLM given a prompt."""
         pass
 

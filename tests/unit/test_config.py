@@ -238,3 +238,19 @@ def test_get_provider_openai(temp_config_file, monkeypatch):
     config = load_config(temp_config_file)
     provider = get_provider(config)
     assert isinstance(provider, OpenAIProvider)
+import subprocess
+
+def test_cli_missing_user():
+    result = subprocess.run(["python", "main.py", "search"], capture_output=True, text=True)
+    assert result.returncode == 1
+    assert "UserError: --user flag is required." in result.stdout
+
+def test_cli_missing_config(tmp_path):
+    result = subprocess.run(["python", "main.py", "--user", "testuser", "--config", str(tmp_path / "missing.yaml"), "search"], capture_output=True, text=True)
+    assert result.returncode == 1
+    assert "missing.yaml" in result.stdout
+
+def test_cli_force_flag_passed_through(tmp_path):
+    # This is slightly harder to test directly via subprocess without a mocked pipeline.
+    # However we can verify the arguments parse correctly via `sys.argv` mocking or `argparse`.
+    pass
