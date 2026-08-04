@@ -126,3 +126,115 @@ def test_optional_keys_default_correctly(temp_config_file):
     assert config.pdf.theme == "sb2nov"
     assert config.search.min_salary is None
     assert config.search.exclude_companies == []
+
+def test_get_provider_unknown(temp_config_file):
+    from src.llm.base import get_provider
+    import yaml
+    base_data = {
+        'provider': 'unknown_provider',
+        'model': 'qwen',
+        'base_resume': 'resume.md',
+        'output_dir': 'output',
+        'search': {
+            'keywords': 'test',
+            'location': 'remote',
+            'remote': True,
+            'results_wanted': 10
+        }
+    }
+    with open(temp_config_file, 'w') as f:
+        yaml.dump(base_data, f)
+    config = load_config(temp_config_file)
+    with pytest.raises(ConfigError) as exc_info:
+        get_provider(config)
+    assert "Unknown provider: unknown_provider" in str(exc_info.value)
+
+def test_get_provider_lmstudio(temp_config_file):
+    from src.llm.base import get_provider
+    from src.llm.lmstudio_provider import LMStudioProvider
+    import yaml
+    base_data = {
+        'provider': 'lmstudio',
+        'model': 'qwen',
+        'base_resume': 'resume.md',
+        'output_dir': 'output',
+        'search': {
+            'keywords': 'test',
+            'location': 'remote',
+            'remote': True,
+            'results_wanted': 10
+        }
+    }
+    with open(temp_config_file, 'w') as f:
+        yaml.dump(base_data, f)
+    config = load_config(temp_config_file)
+    provider = get_provider(config)
+    assert isinstance(provider, LMStudioProvider)
+
+def test_get_provider_ollama(temp_config_file):
+    from src.llm.base import get_provider
+    from src.llm.ollama_provider import OllamaProvider
+    import yaml
+    base_data = {
+        'provider': 'ollama',
+        'model': 'qwen',
+        'base_resume': 'resume.md',
+        'output_dir': 'output',
+        'search': {
+            'keywords': 'test',
+            'location': 'remote',
+            'remote': True,
+            'results_wanted': 10
+        }
+    }
+    with open(temp_config_file, 'w') as f:
+        yaml.dump(base_data, f)
+    config = load_config(temp_config_file)
+    provider = get_provider(config)
+    assert isinstance(provider, OllamaProvider)
+
+def test_get_provider_anthropic(temp_config_file, monkeypatch):
+    from src.llm.base import get_provider
+    from src.llm.anthropic_provider import AnthropicProvider
+    import yaml
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test_key")
+    base_data = {
+        'provider': 'anthropic',
+        'model': 'qwen',
+        'base_resume': 'resume.md',
+        'output_dir': 'output',
+        'search': {
+            'keywords': 'test',
+            'location': 'remote',
+            'remote': True,
+            'results_wanted': 10
+        }
+    }
+    with open(temp_config_file, 'w') as f:
+        yaml.dump(base_data, f)
+    config = load_config(temp_config_file)
+    provider = get_provider(config)
+    assert isinstance(provider, AnthropicProvider)
+
+def test_get_provider_openai(temp_config_file, monkeypatch):
+    from src.llm.base import get_provider
+    from src.llm.openai_provider import OpenAIProvider
+    import yaml
+    monkeypatch.setenv("OPENAI_API_KEY", "test_key")
+    base_data = {
+        'provider': 'openai',
+        'model': 'qwen',
+        'base_resume': 'resume.md',
+        'output_dir': 'output',
+        'search': {
+            'keywords': 'test',
+            'location': 'remote',
+            'remote': True,
+            'results_wanted': 10
+        }
+    }
+    with open(temp_config_file, 'w') as f:
+        yaml.dump(base_data, f)
+    config = load_config(temp_config_file)
+    provider = get_provider(config)
+    assert isinstance(provider, OpenAIProvider)
