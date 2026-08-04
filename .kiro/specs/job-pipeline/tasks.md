@@ -132,6 +132,9 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
   - [x] 6.10 Add Keyword Exclusion Filtering
     - Add an `exclude_keywords` list in `SearchConfig`.
     - Update `_filter_jobs()` to drop any jobs containing those red-flag keywords (e.g. "US Citizen", "Clearance") in the description.
+  - [ ] 6.11 Implement Time-Bounded Incremental Search (Search Caching)
+    - Write a `users/{username}/last_search.json` file with a timestamp after every successful search run.
+    - On subsequent runs, calculate the hours since the last run and pass `hours_old=X` to JobSpy to only fetch newly posted jobs.
 
 - [x] 7. Checkpoint — Ensure all tests pass so far
   - Run `uv run pytest tests/unit/ tests/property/test_slug_properties.py tests/property/test_filter_properties.py tests/property/test_prompt_properties.py tests/property/test_search_output_properties.py -v`
