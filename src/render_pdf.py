@@ -5,6 +5,7 @@ import markdown
 from weasyprint import HTML
 import yaml
 import re
+import shutil
 
 from src.exceptions import RenderError
 
@@ -46,7 +47,7 @@ def _md_to_rendercv_yaml(md_content: str, personal_info: dict) -> dict:
     }
     return {"cv": cv_data, "design": design_data}
 
-def render_resume_pdf(job, output_dir: Path, theme: str) -> Path:
+def render_resume_pdf(job, output_dir: Path, theme: str, user_dir: Path) -> Path:
     """
     Verify `resume.md` exists (raise `RenderError` if not); call `_md_to_rendercv_yaml()`;
     write `resume.yaml`; invoke `rendercv render resume.yaml` via `subprocess`;
@@ -65,6 +66,12 @@ def render_resume_pdf(job, output_dir: Path, theme: str) -> Path:
     resume_yaml_path = output_dir / "resume.yaml"
     with open(resume_yaml_path, 'w', encoding='utf-8') as f:
         yaml.dump(yaml_data, f)
+
+    # Check for custom theme
+    custom_theme_dir = user_dir / "templates" / theme
+    if custom_theme_dir.exists() and custom_theme_dir.is_dir():
+        target_theme_dir = output_dir / theme
+        shutil.copytree(custom_theme_dir, target_theme_dir, dirs_exist_ok=True)
 
     try:
         result = subprocess.run(["rendercv", "render", "resume.yaml"], cwd=output_dir, capture_output=True, text=True)

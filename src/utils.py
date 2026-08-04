@@ -48,13 +48,14 @@ def load_prompt(template_name: str, user_dir: Path, variables: Dict[str, str]) -
 
 def scaffold_user_dir(user_dir: Path) -> None:
     """
-    Create `resumes/`, `output/`, `prompts/` in `user_dir`.
+    Create `resumes/`, `output/`, `prompts/`, `templates/` in `user_dir`.
     Write stub `config.yaml` if it doesn't exist.
     Write empty `processed_jobs.json` if it doesn't exist.
     """
     (user_dir / "resumes").mkdir(parents=True, exist_ok=True)
     (user_dir / "output").mkdir(parents=True, exist_ok=True)
     (user_dir / "prompts").mkdir(parents=True, exist_ok=True)
+    (user_dir / "templates").mkdir(parents=True, exist_ok=True)
 
     config_path = user_dir / "config.yaml"
     if not config_path.exists():

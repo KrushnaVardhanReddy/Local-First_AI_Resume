@@ -132,7 +132,7 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
   - [x] 6.10 Add Keyword Exclusion Filtering
     - Add an `exclude_keywords` list in `SearchConfig`.
     - Update `_filter_jobs()` to drop any jobs containing those red-flag keywords (e.g. "US Citizen", "Clearance") in the description.
-  - [ ] 6.11 Implement Time-Bounded Incremental Search (Search Caching)
+  - [x] 6.11 Implement Time-Bounded Incremental Search (Search Caching)
     - Write a `users/{username}/last_search.json` file with a timestamp after every successful search run.
     - On subsequent runs, calculate the hours since the last run and pass `hours_old=X` to JobSpy to only fetch newly posted jobs.
 
@@ -260,9 +260,9 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Verify `--force` flag causes already-processed jobs to be reprocessed
     - _Requirements: 2.4, 4.4, 5.4, 6.4, 7.1, 7.2, 8.1, 10.3, 10.5, 13.7_
 
-- [ ] 16. Support Pluggable Community Templates and Add-ons
-  - [ ] 16.1 Custom RenderCV Themes: Ensure the architecture supports loading custom RenderCV theme folders from a `users/{username}/templates/` directory so users can install third-party PDF themes.
-  - [ ] 16.2 Custom Prompt Packs: Ensure `load_prompt()` supports reading prompt overrides from a `users/{username}/prompts/` directory to allow users to drop in community "Prompt Packs".
+- [x] 16. Support Pluggable Community Templates and Add-ons
+  - [x] 16.1 Custom RenderCV Themes: Ensure the architecture supports loading custom RenderCV theme folders from a `users/{username}/templates/` directory so users can install third-party PDF themes.
+  - [x] 16.2 Custom Prompt Packs: Ensure `load_prompt()` supports reading prompt overrides from a `users/{username}/prompts/` directory to allow users to drop in community "Prompt Packs".
 
 - [ ] 17. Final checkpoint — Ensure all tests pass
   - Run `uv run pytest tests/ -v`
