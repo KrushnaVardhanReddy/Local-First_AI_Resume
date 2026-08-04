@@ -28,39 +28,39 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Each inherits from `Exception`; include a docstring describing when it is raised
     - _Requirements: 3.6, 3.7, 9.4, 13.8_
 
-- [ ] 3. Implement configuration loader
-  - [ ] 3.1 Create `src/config.py` with `SearchConfig`, `PdfConfig`, and `AppConfig` dataclasses and `load_config()` function
+- [x] 3. Implement configuration loader
+  - [x] 3.1 Create `src/config.py` with `SearchConfig`, `PdfConfig`, and `AppConfig` dataclasses and `load_config()` function
     - `load_config(config_path: Path) -> AppConfig` reads `config.yaml`, loads `.env` via `python-dotenv`, validates required keys (`provider`, `model`, `base_resume`, `output_dir`, `search`), raises `ConfigError` naming the missing key on failure
     - `SearchConfig` fields: `keywords`, `location`, `remote`, `results_wanted`, `min_salary`, `exclude_companies`
     - `PdfConfig` fields: `theme` (default `"sb2nov"`)
     - `AppConfig` fields: `provider`, `model`, `base_url`, `base_resume`, `output_dir`, `search: SearchConfig`, `pdf: PdfConfig`
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5_
-  - [ ]* 3.2 Write unit tests for `src/config.py` in `tests/unit/test_config.py`
+  - [x]* 3.2 Write unit tests for `src/config.py` in `tests/unit/test_config.py`
     - Test that `ConfigError` is raised with the correct key name for each missing required field
     - Test that `.env` variables are loaded before reading API keys
     - Test that optional keys (`base_url`, `pdf`, `min_salary`, `exclude_companies`) default correctly
     - _Requirements: 9.4, 9.5_
 
-- [ ] 4. Implement shared utilities
-  - [ ] 4.1 Create `src/utils.py` with `make_job_slug()`, `load_prompt()`, and `scaffold_user_dir()`
+- [x] 4. Implement shared utilities
+  - [x] 4.1 Create `src/utils.py` with `make_job_slug()`, `load_prompt()`, and `scaffold_user_dir()`
     - `make_job_slug(company, title)`: lowercase, replace non-alphanumeric with hyphens, collapse consecutive hyphens, strip leading/trailing hyphens, truncate to 80 chars
     - `load_prompt(template_name, user_dir, variables)`: look in `user_dir/prompts/` first, fall back to project-root `prompts/`; substitute `{{base_resume}}` and `{{job_description}}` via `str.replace()`; raise `PromptError` if file not found
     - `scaffold_user_dir(user_dir)`: create `resumes/`, `output/`, `prompts/`; write stub `config.yaml`; write empty `processed_jobs.json`
     - _Requirements: 10.2, 11.2, 11.3, 14.4, 14.5_
-  - [ ]* 4.2 Write property test P1 — slug filesystem-safety in `tests/property/test_slug_properties.py`
+  - [x]* 4.2 Write property test P1 — slug filesystem-safety in `tests/property/test_slug_properties.py`
     - **Property 1: Job slug is deterministic and filesystem-safe**
     - Use `@given(st.text(), st.text())` for company and title; assert result contains only `[a-z0-9-]` and `len <= 80`
     - **Validates: Requirements 10.2**
-  - [ ]* 4.3 Write property test P2 — slug stability in `tests/property/test_slug_properties.py`
+  - [x]* 4.3 Write property test P2 — slug stability in `tests/property/test_slug_properties.py`
     - **Property 2: Slug is stable across equivalent inputs**
     - Use `@given(st.text(), st.text())`; call `make_job_slug` twice with same args; assert equality
     - **Validates: Requirements 10.2**
-  - [ ]* 4.4 Write unit tests for `src/utils.py` in `tests/unit/test_utils.py`
+  - [x]* 4.4 Write unit tests for `src/utils.py` in `tests/unit/test_utils.py`
     - Test `make_job_slug` with known inputs: spaces → hyphens, 80-char truncation, special characters
     - Test `load_prompt` loads user-level override when present, falls back to global otherwise
     - Test `scaffold_user_dir` creates expected directories and files
     - _Requirements: 10.2, 11.2, 14.4_
-  - [ ]* 4.5 Write property test P8 — prompt substitution completeness in `tests/property/test_prompt_properties.py`
+  - [x]* 4.5 Write property test P8 — prompt substitution completeness in `tests/property/test_prompt_properties.py`
     - **Property 8: Prompt variable substitution is complete**
     - Use `@given(st.text(min_size=1), st.text(min_size=1))`; assert result contains neither `{{base_resume}}` nor `{{job_description}}`
     - **Validates: Requirements 11.2**
