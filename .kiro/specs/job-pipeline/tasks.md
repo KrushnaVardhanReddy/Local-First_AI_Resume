@@ -257,7 +257,11 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
     - Verify `--force` flag causes already-processed jobs to be reprocessed
     - _Requirements: 2.4, 4.4, 5.4, 6.4, 7.1, 7.2, 8.1, 10.3, 10.5, 13.7_
 
-- [ ] 16. Final checkpoint — Ensure all tests pass
+- [ ] 16. Support Pluggable Community Templates and Add-ons
+  - [ ] 16.1 Custom RenderCV Themes: Ensure the architecture supports loading custom RenderCV theme folders from a `users/{username}/templates/` directory so users can install third-party PDF themes.
+  - [ ] 16.2 Custom Prompt Packs: Ensure `load_prompt()` supports reading prompt overrides from a `users/{username}/prompts/` directory to allow users to drop in community "Prompt Packs".
+
+- [ ] 17. Final checkpoint — Ensure all tests pass
   - Run `uv run pytest tests/ -v`
   - Ensure all unit, property, and integration tests pass; ask the user if questions arise.
 
@@ -275,6 +279,15 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
   - [ ] 18.1 Package CLI with PyInstaller: Bundle the Python environment and CLI into a single `.exe` (Windows) and binary (macOS/Linux) so users don't need Python installed.
   - [ ] 18.2 Package Web UI: Wrap the Streamlit UI into a desktop executable (using PyInstaller or PyWebView) so non-technical users can just double-click an icon to launch the dashboard.
   - [ ] 18.3 Automated Build Pipeline: Set up GitHub Actions to automatically build and release the executables on every new version.
+
+## Phase 4: Model Context Protocol (MCP) Integration
+
+- [ ] 19. Expose Pipeline as an MCP Server
+  - [ ] 19.1 Create `src/mcp_server.py`: Use the `mcp` Python SDK to expose our job search and resume tailoring functions as tools.
+  - [ ] 19.2 Expose `search_jobs` tool: Allow external AI agents (like Claude Desktop) to trigger a job search and read the results.
+  - [ ] 19.3 Expose `tailor_resume` tool: Allow external AI agents to trigger the pipeline for a specific job slug.
+- [ ] 20. Support MCP Clients for Base Resumes
+  - [ ] 20.1 Update config to optionally read the base resume from an external MCP server (e.g., pulling directly from the user's local Obsidian vault or Notion workspace instead of a static `resume.md` file).
 
 ## Notes
 
