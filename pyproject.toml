@@ -1,0 +1,22 @@
+[project]
+name = "job-pipeline"
+version = "0.1.0"
+description = "A privacy-first, open-source Python pipeline that helps job seekers find jobs, tailor resumes and cover letters."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "python-jobspy",
+    "weasyprint",
+    "markdown",
+    "python-dotenv",
+    "pyyaml",
+    "anthropic",
+    "openai",
+    "requests"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "hypothesis"
+]
