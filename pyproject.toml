@@ -12,7 +12,8 @@ dependencies = [
     "pyyaml",
     "anthropic",
     "openai",
-    "requests"
+    "requests",
+    "rendercv[full]>=2.3",
 ]
 
 [project.optional-dependencies]

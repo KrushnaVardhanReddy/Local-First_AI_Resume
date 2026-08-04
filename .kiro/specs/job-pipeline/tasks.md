@@ -179,31 +179,31 @@ Implement a local-first, privacy-first CLI tool that searches jobs via JobSpy, t
   - [ ]* 9.7 Write unit test for AI-cliché filter in `tests/unit/test_tailor.py`
     - Test that `ValidationError` is raised when the LLM response contains too many blacklisted AI clichés.
 
-- [ ] 10. Implement PDF renderer
-  - [ ] 10.1 Create `src/render_pdf.py` with `render_resume_pdf()`, `render_cover_letter_pdf()`, and `_md_to_rendercv_yaml()`
+- [x] 10. Implement PDF renderer
+  - [x] 10.1 Create `src/render_pdf.py` with `render_resume_pdf()`, `render_cover_letter_pdf()`, and `_md_to_rendercv_yaml()`
     - `_md_to_rendercv_yaml(md_content, personal_info)`: parse structured markdown resume sections (name, experience, education, skills); return dict with top-level keys `cv` (containing `name`, `email`, `sections`) and `design` (containing `theme`)
     - `render_resume_pdf(job, output_dir, theme)`: verify `resume.md` exists (raise `RenderError` if not); call `_md_to_rendercv_yaml()`; write `resume.yaml`; invoke `rendercv render resume.yaml` via `subprocess`; verify output PDF exists; raise `RenderError` if not; return PDF path
     - `render_cover_letter_pdf(job, output_dir)`: verify `cover_letter.md` exists (raise `RenderError` if not); convert markdown → HTML via `markdown` library; convert HTML → PDF via WeasyPrint; verify PDF written; return PDF path
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 7.8_
-  - [ ]* 10.2 Write property test P12 — resume markdown to RenderCV YAML structure in `tests/property/test_render_properties.py`
+  - [x]* 10.2 Write property test P12 — resume markdown to RenderCV YAML structure in `tests/property/test_render_properties.py`
     - **Property 12: Resume markdown to RenderCV YAML preserves required structure**
     - Use `@given(st.text())` as resume markdown; assert returned dict has top-level keys `cv` and `design`, and `cv` has `sections` with at least one entry
     - **Validates: Requirements 7.3**
-  - [ ]* 10.3 Write unit tests for `src/render_pdf.py` in `tests/unit/test_render.py`
+  - [x]* 10.3 Write unit tests for `src/render_pdf.py` in `tests/unit/test_render.py`
     - Test `_md_to_rendercv_yaml` produces expected top-level keys for a sample resume markdown
     - Test `RenderError` raised when source markdown file is missing
     - Test `RenderError` raised when RenderCV exits non-zero
     - _Requirements: 7.3, 7.6, 7.7_
 
-- [ ] 11. Implement application tracker
-  - [ ] 11.1 Create `src/tracker.py` with `update_tracker()`
+- [x] 11. Implement application tracker
+  - [x] 11.1 Create `src/tracker.py` with `update_tracker()`
     - `update_tracker(job, match, output_dir)`: read existing `tracker.md` and `tracker.csv` if present; find row by (company, title) key; update in place or append new row with columns: Company, Title, Location, Match Score, Salary, Link, Resume, Status; new entries have `Status = "- [ ]"`; write both files atomically (write to temp file, then rename)
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
-  - [ ]* 11.2 Write property test P10 — tracker upsert uniqueness in `tests/property/test_tracker_properties.py`
+  - [x]* 11.2 Write property test P10 — tracker upsert uniqueness in `tests/property/test_tracker_properties.py`
     - **Property 10: Tracker upsert preserves uniqueness by (company, title)**
     - Use `st.lists(job_strategy())` and call `update_tracker()` multiple times; assert exactly one row per (company, title) pair in both `tracker.md` and `tracker.csv`; assert new entries have `Status = "- [ ]"`
     - **Validates: Requirements 8.1, 8.2, 8.3, 8.4, 8.5**
-  - [ ]* 11.3 Write unit tests for `src/tracker.py` in `tests/unit/test_tracker.py`
+  - [x]* 11.3 Write unit tests for `src/tracker.py` in `tests/unit/test_tracker.py`
     - Test that tracker reads and re-writes existing entries correctly (update path)
     - Test that new entries are appended with correct columns and unchecked status
     - Test that both `.md` and `.csv` are written with the correct format
