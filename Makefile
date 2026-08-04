@@ -11,3 +11,9 @@ build:
 
 clean:
 	rm -rf build/ dist/ *.spec
+
+USER ?= krushna
+JOB ?= fake-senior-golang-engineer
+
+render:
+	cd users/$(USER)/output/$(JOB) && uv run rendercv render resume.yaml
