@@ -21,7 +21,7 @@ class SearchConfig:
 
 @dataclass
 class PdfConfig:
-    theme: str = "sb2nov"
+    theme: str = "modernblue"
     engine: str = "rendercv"
 
 @dataclass
@@ -78,7 +78,7 @@ def load_config(config_path: Path) -> AppConfig:
 
     pdf_data = data.get('pdf', {})
     pdf_config = PdfConfig(
-        theme=pdf_data.get('theme', "sb2nov"),
+        theme=pdf_data.get('theme', "modernblue"),
         engine=pdf_data.get('engine', "rendercv")
     )
 

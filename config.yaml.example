@@ -5,7 +5,7 @@ base_resume: resumes/backend.md
 output_dir: output/
 
 pdf:
-  theme: sb2nov             # classic | moderncv | sb2nov | engineeringresumes | engineeringclassic
+  theme: "modernblue"       # or "classic", "sleektech", etc.
   engine: jsonresume        # or "rendercv"
 
 search:

@@ -92,7 +92,7 @@ def render_resume_pdf(job, output_dir: Path, theme: str, user_dir: Path, engine:
 
         try:
             result = subprocess.run(
-                ["npx", "-y", "resumed", "export", "--theme", "jsonresume-theme-even", "resume.json", "-o", "resume.html"],
+                ["npx", "-y", "resumed", "export", "--theme", "jsonresume-theme-class", "resume.json", "-o", "resume.html"],
                 cwd=output_dir, capture_output=True, text=True
             )
             if result.returncode != 0:
