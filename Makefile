@@ -1,6 +1,9 @@
-.PHONY: install test build clean
+.PHONY: install test build clean setup-node
 
-install:
+setup-node:
+	npm install -g resumed jsonresume-theme-even
+
+install: setup-node
 	uv sync
 
 test:

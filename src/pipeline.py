@@ -95,7 +95,7 @@ def run_tailor(config: AppConfig, user_dir: Path, force: bool = False, dry_run: 
             cl_path, cl_usage = generate_cover_letter(job, config, user_dir, llm)
             match_result, match_usage = analyze_match(job, config, user_dir, llm)
 
-            render_resume_pdf(job, job_dir, config.pdf.theme, user_dir)
+            render_resume_pdf(job, job_dir, config.pdf.theme, user_dir, config.pdf.engine)
             render_cover_letter_pdf(job, job_dir)
 
             update_tracker(job, match_result, output_base_dir)

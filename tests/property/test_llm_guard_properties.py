@@ -41,7 +41,7 @@ def test_llm_response_length_guard(response_text):
         # Also need a dummy tailored resume for cover letter gen
         job_output_dir = tmp_path / "output" / job.slug
         job_output_dir.mkdir(parents=True, exist_ok=True)
-        (job_output_dir / "resume.md").write_text("existing tailored resume")
+        (job_output_dir / "resume.json").write_text('{"basics": {"name": "Test"}}')
 
         llm = StubLLM(response_text)
 

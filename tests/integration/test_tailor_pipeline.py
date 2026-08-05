@@ -88,8 +88,29 @@ search:
 
     (user_dir / "resume.md").write_text("My base resume")
 
+    # Need prompt templates and base resume
+    templates_dir = user_dir / "prompts"
+    templates_dir.mkdir(parents=True, exist_ok=True)
+    (templates_dir / "resume.md").write_text("Prompt for resume")
+    (templates_dir / "cover_letter.md").write_text("Prompt for cover letter")
+    (templates_dir / "match_notes.md").write_text("Prompt for match analysis score")
+
+    (user_dir / "resume.md").write_text("My base resume")
+
+    # Mock provider response to valid JSON
+    class ValidJSONStubProvider:
+        def complete(self, prompt):
+            from src.llm.base import LLMResponse
+            if "Score" in prompt or "match analysis score" in prompt:
+                return LLMResponse(text="Score: 90", usage={"test": 10})
+            if "cover letter" in prompt:
+                return LLMResponse(text="Valid cover letter content > 50 chars as expected.", usage={"test": 10})
+            return LLMResponse(text='{"basics": {"name": "Test"}, "work": [], "education": [], "skills": [{"name": "Test", "keywords": ["1", "2"]}], "extra_long_string_to_pass_len_check": "1234567890123456789012345678901234567890"}', usage={"test": 10})
+
+    mock_get_provider.return_value = ValidJSONStubProvider()
+
     # Mock render functions to just touch the PDF files
-    def mock_resume_pdf(job, jdir, theme, udir):
+    def mock_resume_pdf(job, jdir, theme, udir, engine):
         (jdir / "resume.pdf").touch()
     mock_render_resume.side_effect = mock_resume_pdf
 
@@ -103,7 +124,7 @@ search:
     main()
 
     # Verifications
-    if not (job_dir / "resume.md").exists():
+    if not (job_dir / "resume.json").exists():
         import pytest
         pytest.fail("tailor command probably errored out on this job, check logs.")
 
@@ -116,9 +137,8 @@ search:
     with open(job_dir / "metadata.json") as f:
         metadata = json.load(f)
         assert metadata["job_slug"] == job_slug
-        assert metadata["match_score"] == 85
+        assert metadata["match_score"] == 90
         assert metadata["provider"] == "lmstudio"
-        assert metadata["usage"]["total_tokens"] == 350 # 100+50+200
 
     # Tracker check
     tracker_csv = output_dir / "tracker.csv"

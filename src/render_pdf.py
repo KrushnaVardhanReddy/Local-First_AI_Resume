@@ -4,64 +4,123 @@ from pathlib import Path
 import markdown
 from weasyprint import HTML
 import yaml
+import json
 import re
 import shutil
 
 from src.exceptions import RenderError
 
-def _md_to_rendercv_yaml(md_content: str, personal_info: dict) -> dict:
+def _json_to_rendercv_yaml(json_content: dict, personal_info: dict) -> dict:
     """
-    Parse structured markdown resume sections (name, experience, education, skills).
-    Return dict with top-level keys `cv` (containing `name`, `email`, `sections`)
-    and `design` (containing `theme`).
+    Map JSON Resume object to RenderCV YAML dictionary.
     """
+    basics = json_content.get("basics", {})
+    name = basics.get("name", "John Doe")
+    email = basics.get("email", "john@example.com")
+    summary = basics.get("summary", "")
+
     sections = {}
-    current_section = "Summary"
-    current_content = []
 
-    for line in md_content.splitlines():
-        # Match headings (## Section Name or # Section Name)
-        heading_match = re.match(r'^#+\s+(.*)', line)
-        if heading_match:
-            if current_content:
-                sections[current_section] = ["\n".join(current_content).strip()]
-            current_section = heading_match.group(1).strip()
-            current_content = []
-        else:
-            current_content.append(line)
+    if summary:
+        sections["Summary"] = [summary]
 
-    if current_content:
-        sections[current_section] = ["\n".join(current_content).strip()]
+    skills = json_content.get("skills", [])
+    if skills:
+        sections["Skills"] = []
+        for skill in skills:
+            skill_name = skill.get("name", "")
+            keywords = skill.get("keywords", [])
+            if isinstance(keywords, list):
+                keywords_str = ", ".join(keywords)
+            else:
+                keywords_str = str(keywords)
+            sections["Skills"].append(f"**{skill_name}**: {keywords_str}")
 
-    # If the markdown was totally empty or no sections matched
-    if not sections:
-        sections["Summary"] = [md_content]
+    work = json_content.get("work", [])
+    if work:
+        sections["Experience"] = []
+        for w in work:
+            company = w.get("name", "")
+            position = w.get("position", "")
+            summary_w = w.get("summary", "")
+            highlights = w.get("highlights", [])
+
+            lines = []
+            if company or position:
+                lines.append(f"**{company}**, {position}")
+            if summary_w:
+                lines.append(summary_w)
+            for h in highlights:
+                lines.append(f"- {h}")
+            sections["Experience"].append("\n".join(lines))
+
+    education = json_content.get("education", [])
+    if education:
+        sections["Education"] = []
+        for e in education:
+            inst = e.get("institution", "")
+            area = e.get("area", "")
+            studyType = e.get("studyType", "")
+            sections["Education"].append(f"**{inst}** - {studyType} in {area}")
 
     cv_data = {
-        "name": personal_info.get("name", "John Doe"),
-        "email": personal_info.get("email", "john@example.com"),
+        "name": name,
+        "email": email,
         "sections": sections
     }
+
     design_data = {
         "theme": personal_info.get("theme", "classic")
     }
+
     return {"cv": cv_data, "design": design_data}
 
-def render_resume_pdf(job, output_dir: Path, theme: str, user_dir: Path) -> Path:
+def render_resume_pdf(job, output_dir: Path, theme: str, user_dir: Path, engine: str = "rendercv") -> Path:
     """
-    Verify `resume.md` exists (raise `RenderError` if not); call `_md_to_rendercv_yaml()`;
+    Verify `resume.json` exists (raise `RenderError` if not); call `_json_to_rendercv_yaml()`;
     write `resume.yaml`; invoke `rendercv render resume.yaml` via `subprocess`;
     verify output PDF exists; raise `RenderError` if not; return PDF path.
+    Or, if engine is jsonresume, use resumed and weasyprint.
     """
-    resume_md_path = output_dir / "resume.md"
-    if not resume_md_path.exists():
-        raise RenderError(f"Source markdown file missing: {resume_md_path}")
+    resume_json_path = output_dir / "resume.json"
+    if not resume_json_path.exists():
+        raise RenderError(f"Source JSON file missing: {resume_json_path}")
 
-    with open(resume_md_path, 'r', encoding='utf-8') as f:
-        md_content = f.read()
+    if engine == "jsonresume":
+        html_path = output_dir / "resume.html"
+        pdf_path = output_dir / "resume.pdf"
+
+        try:
+            result = subprocess.run(
+                ["npx", "-y", "resumed", "export", "--theme", "jsonresume-theme-even", "resume.json", "-o", "resume.html"],
+                cwd=output_dir, capture_output=True, text=True
+            )
+            if result.returncode != 0:
+                raise RenderError(f"resumed exited with code {result.returncode}: {result.stderr}")
+        except Exception as e:
+            if isinstance(e, RenderError):
+                raise
+            raise RenderError(f"Failed to run resumed: {e}")
+
+        try:
+            HTML(filename=str(html_path)).write_pdf(str(pdf_path))
+        except Exception as e:
+            raise RenderError(f"WeasyPrint failed: {e}")
+
+        if not pdf_path.exists():
+            raise RenderError("PDF was not generated by jsonresume engine.")
+
+        return pdf_path
+
+    # Default to rendercv engine
+    with open(resume_json_path, 'r', encoding='utf-8') as f:
+        try:
+            json_content = json.load(f)
+        except json.JSONDecodeError as e:
+            raise RenderError(f"Failed to decode resume.json: {e}")
 
     personal_info = {"theme": theme}
-    yaml_data = _md_to_rendercv_yaml(md_content, personal_info)
+    yaml_data = _json_to_rendercv_yaml(json_content, personal_info)
 
     resume_yaml_path = output_dir / "resume.yaml"
     with open(resume_yaml_path, 'w', encoding='utf-8') as f:

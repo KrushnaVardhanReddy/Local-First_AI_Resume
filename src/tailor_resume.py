@@ -1,3 +1,4 @@
+import json
 import re
 import logging
 import asyncio
@@ -87,9 +88,14 @@ def tailor_resume(job: Job, config: AppConfig, user_dir: Path, llm: LLMProvider)
     if len(response_text) < 50:
         raise ValidationError("LLM response too short (< 50 chars)")
 
+    try:
+        json.loads(response_text)
+    except json.JSONDecodeError:
+        raise ValidationError("LLM did not return valid JSON")
+
     check_ai_cliches(response_text)
 
-    output_path = job_output_dir / "resume.md"
+    output_path = job_output_dir / "resume.json"
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(response_text)
 
@@ -100,7 +106,7 @@ def generate_cover_letter(job: Job, config: AppConfig, user_dir: Path, llm: LLMP
     job_output_dir = user_dir / config.output_dir / job.slug
     job_output_dir.mkdir(parents=True, exist_ok=True)
 
-    resume_path = job_output_dir / "resume.md"
+    resume_path = job_output_dir / "resume.json"
     try:
         with open(resume_path, "r", encoding="utf-8") as f:
             resume_md = f.read()

@@ -58,6 +58,8 @@ def test_pluggable_templates_for_rendercv(mock_run, tmp_path, monkeypatch):
 
     (job_dir / "resume.md").write_text("# Resume")
 
+    (job_dir / "resume.json").write_text('{"basics": {"name": "Test"}}')
+
     # Since render_resume_pdf expects a PDF in rendercv_output, mock subprocess to create one
     def mock_run_effect(*args, **kwargs):
         pdf_dir = job_dir / "rendercv_output"
@@ -69,7 +71,7 @@ def test_pluggable_templates_for_rendercv(mock_run, tmp_path, monkeypatch):
 
     monkeypatch.chdir(tmp_path)
 
-    render_resume_pdf(job, job_dir, "my_custom_theme", user_dir)
+    render_resume_pdf(job, job_dir, "my_custom_theme", user_dir, "rendercv")
 
     # Verify that rendercv was called
     mock_run.assert_called_once()

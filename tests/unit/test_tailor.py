@@ -26,13 +26,13 @@ def test_tailor_resume_writes_valid_content(tmp_path: Path):
     (tmp_path / "prompts").mkdir(parents=True, exist_ok=True)
     (tmp_path / "prompts" / "resume.md").write_text("dummy prompt")
 
-    valid_content = "This is a valid tailored resume that is long enough to pass the guard of 50 characters."
+    valid_content = '{"basics": {"name": "Test"}, "work": [], "education": [], "skills": [{"name": "Test", "keywords": ["1", "2"]}], "extra_long_string_to_pass_len_check": "1234567890123456789012345678901234567890"}'
     llm = StubLLM(valid_content)
 
     output_path, usage = tailor_resume(job, config, tmp_path, llm)
 
     assert output_path.exists()
-    assert output_path.name == "resume.md"
+    assert output_path.name == "resume.json"
     assert output_path.read_text() == valid_content
 
 def test_generate_cover_letter_writes_valid_content(tmp_path: Path):
@@ -47,7 +47,7 @@ def test_generate_cover_letter_writes_valid_content(tmp_path: Path):
 
     job_output_dir = tmp_path / "output" / job.slug
     job_output_dir.mkdir(parents=True, exist_ok=True)
-    (job_output_dir / "resume.md").write_text("existing tailored resume")
+    (job_output_dir / "resume.json").write_text('{"basics": {"name": "Test"}}')
 
     (tmp_path / "prompts").mkdir(parents=True, exist_ok=True)
     (tmp_path / "prompts" / "cover_letter.md").write_text("dummy prompt")
@@ -75,7 +75,7 @@ def test_ai_cliche_filter_raises_validation_error(tmp_path: Path):
     (tmp_path / "prompts").mkdir(parents=True, exist_ok=True)
     (tmp_path / "prompts" / "resume.md").write_text("dummy prompt")
 
-    cliche_content = "This is a long enough resume that decides to delve into the innovative and dynamic synergy of things."
+    cliche_content = '{"basics": {"name": "Test"}, "summary": "This is a long enough resume that decides to delve into the innovative and dynamic synergy of things."}'
     llm = StubLLM(cliche_content)
 
     with pytest.raises(ValidationError, match="too many AI clichés"):
