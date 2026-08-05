@@ -55,7 +55,7 @@ Refactor `render_resume_pdf()` to dispatch based on `config.pdf.engine`:
 
 #### For `engine == "jsonresume"`:
 1. Read `resume.json` from `output_dir`.
-2. Run: `npx -y resumed export --theme jsonresume-theme-even resume.json -o resume.html` in `output_dir`.
+2. Run: `npx -y resumed export --theme jsonresume-theme-class resume.json -o resume.html` in `output_dir`.
 3. Run: `npx -y @puppeteer/browsers install chrome` if chrome is not available, then use a Node.js script or puppeteer CLI to convert `resume.html` to `resume.pdf`.
    - Simpler alternative: use `weasyprint` (already a dependency) to convert the rendered HTML to PDF via `HTML(filename="resume.html").write_pdf("resume.pdf")`.
 4. Return the path to `resume.pdf`.
@@ -75,7 +75,7 @@ The existing `_md_to_rendercv_yaml()` logic must now read from `resume.json` ins
 Add a new `setup-node` target that installs the required npm packages globally:
 ```makefile
 setup-node:
-    npm install -g resumed jsonresume-theme-even
+    npm install -g resumed jsonresume-theme-class
 ```
 
 Also add `setup-node` as a dependency of the existing `install` target.

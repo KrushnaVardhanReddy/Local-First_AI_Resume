@@ -1,7 +1,7 @@
 .PHONY: install test build clean setup-node
 
 setup-node:
-	npm install -g resumed jsonresume-theme-even
+	npm install -g resumed jsonresume-theme-class
 
 install: setup-node
 	uv sync
