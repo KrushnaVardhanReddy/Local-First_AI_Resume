@@ -123,7 +123,7 @@ def test_optional_keys_default_correctly(temp_config_file):
     config = load_config(temp_config_file)
 
     assert config.base_url is None
-    assert config.pdf.theme == "sb2nov"
+    assert config.pdf.theme == "modernblue"
     assert config.search.min_salary is None
     assert config.search.exclude_companies == []
 
