@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Jules Batch Submitter for LocalMind
-Sends tasks to Jules API to create async coding sessions → GitHub PRs.
+# Jules Batch Submitter for Local-First AI Resume
+# Sends tasks to Jules API to create async coding sessions → GitHub PRs.
 
 Usage:
   python3 jules_submit.py               # List all available tasks
@@ -86,208 +86,6 @@ TASKS = {
         "name": "Task 10 — JSON Resume dual-engine rendering support",
         "phase": "resume",
         "prompt": _load_prompt("jules_jsonresume.md"),
-    },
-    1: {
-        "name": "Task 1 — v2 Scaffolding and WorkerPool Integration",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task1.md"),
-    },
-    2: {
-        "name": "Task 2 — Data Ingestion and Local File Access",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task2.md"),
-    },
-    3: {
-        "name": "Task 3 — Query Execution and Data Visualization",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task3.md"),
-    },
-    4: {
-        "name": "Task 4 — Consent-Gated AI Insights",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task4.md"),
-    },
-    5: {
-        "name": "Task 5 — AI-Assisted Chart Customization",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task5_ai_chart.md"),
-    },
-    6: {
-        "name": "Task 6 — Multi-File Auto-Joins & Diffing",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task6_joins_diff.md"),
-    },
-    71: {
-        "name": "Task 7.1 — BI Pivot Builder ECharts Visualization & Chart Type Selector",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task7_1_bi_chart_selector.md"),
-    },
-    72: {
-        "name": "Task 7.2 — BI Pivot Builder True Pivot, Filters & SQL Panel",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task7_2_bi_pivot_filters.md"),
-    },
-    73: {
-        "name": "Task 7.3 — BI Pivot Builder Table Polish (Totals, Pagination, Empty State)",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task7_3_bi_table_polish.md"),
-    },
-    74: {
-        "name": "Task 7.4 — BI Pivot Builder Component Architecture & Premium UI",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task7_4_bi_component_architecture.md"),
-    },
-    9: {
-        "name": "Task 9 — End-to-End Testing (Phase 1 Full Surface)",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task9_e2e.md"),
-    },
-    13: {
-        "name": "Task 13 — Network Graph Visualizer",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task13_network_graph.md"),
-    },
-    14: {
-        "name": "Task 14 — HTML Table Extractor",
-        "phase": "phase-1",
-        "prompt": _load_prompt("docs/tasks/phase-1/task14_html_extractor.md"),
-    },
-    # ── Robustness Wave — Ship with/right after MVP1 launch ───────────────────
-    90: {
-        "name": "CI-1 — GitHub Actions CI/CD Pipeline",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_ci_pipeline.md"),
-    },
-    91: {
-        "name": "CI-2 — Content Security Policy (CSP)",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_csp.md"),
-    },
-    92: {
-        "name": "CI-3 — Service Worker Cache Versioning & WASM Update Strategy",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_sw_versioning.md"),
-    },
-    93: {
-        "name": "CI-4 — Worker Error Boundary & Crash Recovery",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_worker_error_boundary.md"),
-    },
-    94: {
-        "name": "CI-5 — First-Run Onboarding & Empty State",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_onboarding.md"),
-    },
-    95: {
-        "name": "CI-6 — Accessibility (a11y) Audit & Remediation",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_a11y_audit.md"),
-    },
-    # ── MVP2: Sessions ────────────────────────────────────────────────────────
-    100: {
-        "name": "Session-1 — Core Session Schema & Local Export",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_session1_core.md"),
-    },
-    103: {
-        "name": "Session-3 — PDF Report Export",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_session3_pdf_export.md"),
-    },
-    104: {
-        "name": "Session-4 — Session Import (Restore from .lm file)",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_session4_import.md"),
-    },
-    # ── MVP2: Docs Workspace ──────────────────────────────────────────────────
-    110: {
-        "name": "Docs-1 — Docs Workspace Route & Layout",
-        "phase": "phase-2",
-        "prompt": _load_prompt("docs/tasks/phase-2/task_docs_workspace.md"),
-    },
-    # ── Phase 9: LocalMind OS ─────────────────────────────────────────────────
-    120: {
-        "name": "Task 1 — Macro-Shell Layout & Command Palette",
-        "phase": "phase-9",
-        "prompt": _load_prompt("docs/tasks/phase-9/task1_macro_shell.md"),
-    },
-    121: {
-        "name": "Task 2 — OPFS File Explorer Sidebar",
-        "phase": "phase-9",
-        "prompt": _load_prompt("docs/tasks/phase-9/task2_explorer.md"),
-    },
-    122: {
-        "name": "Task 4 — Dynamic Right Inspector Panel",
-        "phase": "phase-9",
-        "prompt": _load_prompt("docs/tasks/phase-9/task4_inspector.md"),
-    },
-    123: {
-        "name": "Task 5 — Workspace Migration",
-        "phase": "phase-9",
-        "prompt": _load_prompt("docs/tasks/phase-9/task5_migration.md"),
-    },
-    # ── POST-V1 DEFERRED TASKS ─────────────────────────────────────────────────
-    51: {
-        "name": "Set 12 Task 1 — Security / Cryptography Workspace",
-        "phase": "phase-6",
-        "prompt": _load_prompt("docs/tasks/phase-6/task3_crypto.md"),
-    },
-    52: {
-        "name": "Set 12 Task 2 — Infinite Whiteboard Integration (Excalidraw)",
-        "phase": "phase-8",
-        "prompt": _load_prompt("docs/tasks/phase-8/task1_whiteboard.md"),
-    },
-    53: {
-        "name": "Set 12 Task 3 — Language Learning Workspace (Polyglot)",
-        "phase": "phase-6",
-        "prompt": _load_prompt("docs/tasks/phase-6/task5_language.md"),
-    },
-    # ── Set 16: UX & Product Polish ────────────────────────────────────────────
-    81: {
-        "name": "UX-1 — Landing Dashboard & Workspace Routing",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_ux1_dashboard_routing.md"),
-    },
-    82: {
-        "name": "UX-2 — Command Palette (Cmd+K)",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_ux2_command_palette.md"),
-    },
-    83: {
-        "name": "UX-3 — Static HTML Report Export",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_ux3_report_export.md"),
-    },
-    84: {
-        "name": "UX-4 — Template Gallery",
-        "phase": "cross_cutting",
-        "prompt": _load_prompt("docs/tasks/cross_cutting/task_ux4_template_gallery.md"),
-    },
-    # ── E2E Coverage Wave — All completed phases ──────────────────────────────
-    200: {
-        "name": "E2E Wave — Phase 2 Docs Plugins (Mermaid, Excalidraw, Doc Diff)",
-        "phase": "phase-2",
-        "prompt": _load_prompt("docs/tasks/phase-2/task_e2e_docs_plugins.md"),
-    },
-    201: {
-        "name": "E2E Wave — Phase 9 Macro-Shell OS (Explorer, Command Palette, Inspector)",
-        "phase": "phase-9",
-        "prompt": _load_prompt("docs/tasks/phase-9/task_e2e_macro_shell.md"),
-    },
-    202: {
-        "name": "E2E Wave — Phase 13 Universal Doc Q&A & Directory Search",
-        "phase": "phase-13",
-        "prompt": _load_prompt("docs/tasks/phase-13/task_e2e_universal_doc.md"),
-    },
-    203: {
-        "name": "E2E Wave — Phase 6 & 3 Niche Plugins (Geo, Finance, Annotate, Diagrams, Pyodide, Study Notes, Summarizer)",
-        "phase": "phase-6",
-        "prompt": _load_prompt("docs/tasks/phase-6/task_e2e_niche_plugins.md"),
-    },
-    204: {
-        "name": "E2E Wave — Phase 4 DevTools (Formatters, Git, Log, HAR, PCAP, PII, Mock Server)",
-        "phase": "phase-4",
-        "prompt": _load_prompt("docs/tasks/phase-4/task_e2e_devtools.md"),
     },
 }
 
@@ -375,7 +173,7 @@ def submit_file(filepath):
 
 
 def list_tasks():
-    print("\n📋 Available LocalMind Jules Tasks:\n")
+    print("\n📋 Available Jules Tasks:\n")
     for num, task in sorted(TASKS.items()):
         print(f"  [{num:>3}] {task['name']}  ({task['phase']})")
     print()
