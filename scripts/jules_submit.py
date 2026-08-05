@@ -82,6 +82,11 @@ def _load_prompt(relative_path):
 
 
 TASKS = {
+    10: {
+        "name": "Task 10 — JSON Resume dual-engine rendering support",
+        "phase": "resume",
+        "prompt": _load_prompt("jules_jsonresume.md"),
+    },
     1: {
         "name": "Task 1 — v2 Scaffolding and WorkerPool Integration",
         "phase": "phase-1",
